@@ -28,6 +28,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Svg Path="{Binding IconPath}" Width="20" Height="20" Stretch="Uniform"/>
                                     <TextBlock Text="{Binding ButtonText}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    <Border Background="{Binding StatusColor}" CornerRadius="50" Width="10" Height="10" Margin="10,0,0,0" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </DataTemplate>

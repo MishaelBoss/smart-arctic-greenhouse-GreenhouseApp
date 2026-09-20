@@ -1,11 +1,13 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using GreenhouseApp.Infrastructure;
 using GreenhouseApp.Messages;
 using GreenhouseApp.Services;
 using GreenhouseApp.Views;
@@ -16,6 +18,7 @@ namespace GreenhouseApp.ViewModels.Components;
 public partial class LeftBoardUserControlViewModel : ViewModelBase
 {
     private readonly ApiClient _api = new();
+    private CancellationTokenSource? _cts;
     
     [ObservableProperty] public partial ObservableCollection<DashboardButtonViewModel> Buttons { get; set; } = [];
     [ObservableProperty] public partial int SelectedDeviceId { get; set; } = -1;
@@ -27,6 +30,8 @@ public partial class LeftBoardUserControlViewModel : ViewModelBase
         IsActive = true;
         
         _ = LoadDevicesAsync();
+
+        _cts = UiTimerManager.UpdateUiAsync(PollDevicesStatusAsync, TimeSpan.FromSeconds(2));
     }
 
     private async Task LoadDevicesAsync()
@@ -47,28 +52,42 @@ public partial class LeftBoardUserControlViewModel : ViewModelBase
             {
                 var capturedId = device.Id;
                 var capturedName = device.Name;
+                var connectionType = device.ConnectionType ?? "wifi";
                 
                 var btn = new DashboardButtonViewModel(
-                    buttonText: capturedName,
-                    command: new AsyncRelayCommand(() =>
-                        SelectDeviceAsync(capturedId, capturedName, device.ConnectionType ?? "wifi")),
-                    iconPath: device.ConnectionType?.ToLower() == "usb" ? "usb.svg" : "wifi.svg"
+                    capturedId,
+                    capturedName,
+                    new AsyncRelayCommand(() => SelectDeviceAsync(capturedId, capturedName, connectionType)),
+                    connectionType.Equals("usb", StringComparison.OrdinalIgnoreCase) ? "usb.svg" : "wifi.svg",
+                    connectionType
                 );
 
                 Buttons.Add(btn);
             }
 
             Log.Information("LeftBoard: loaded {Count} devices", Buttons.Count);
-
-            // if (Buttons.Count > 0)
-            // {
-            //     var first = devices[0];
-            //     await SelectDeviceAsync(first.Id, first.Name);
-            // }
+            await PollDevicesStatusAsync();
         }
         catch (Exception ex)
         {
             Log.Error(ex, "LeftBoard: error loading devices");
+        }
+    }
+
+    private async Task PollDevicesStatusAsync()
+    {
+        foreach (var btn in Buttons)
+        {
+            if (btn.ConnectionType.Equals("usb", StringComparison.OrdinalIgnoreCase))
+            {
+                var ports = SerialClient.GetAvailablePorts();
+                btn.IsOnline = ports.Length > 0;
+            }
+            else
+            {
+                var latest = await _api.GetLatestAsync(btn.DeviceId);
+                btn.IsOnline = latest is { IsFresh: true };
+            }
         }
     }
 
@@ -101,7 +120,9 @@ public partial class LeftBoardUserControlViewModel : ViewModelBase
     public void Dispose()
     {
         IsActive = false;
-        
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
         GC.SuppressFinalize(this);
     }
 }
