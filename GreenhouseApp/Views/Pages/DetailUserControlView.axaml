@@ -20,9 +20,6 @@
                    Foreground="White" FontSize="26" FontWeight="Bold"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
       </Grid>
-      <TextBlock Text="{Binding DeviceName}"
-                 Foreground="White" FontSize="14" FontWeight="Bold"
-                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </StackPanel>
 
     <!-- ПОЧВА + КЛИМАТ -->
@@ -188,8 +185,8 @@
           <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="4"
                       VerticalAlignment="Center">
             <Button Classes="iconbtn" ToolTip.Tip="Обновить данные"
-                    Command="{Binding RefreshCommand}">
-              <Image Source="{SvgImage /Assets/rotate-ccw.svg}" Width="20" Height="20"/>
+                    Command="{Binding RefreshChartCommand}">
+              <Image Source="{SvgImage /Assets/refresh-cw.svg}" Width="20" Height="20"/>
             </Button>
             <Button Classes="iconbtn" ToolTip.Tip="Пауза / Продолжить"
                     Command="{Binding TogglePauseCommand}">

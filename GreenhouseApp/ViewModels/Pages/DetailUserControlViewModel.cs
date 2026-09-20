@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using GreenhouseApp.Infrastructure;
-using GreenhouseApp.Messages;
 using GreenhouseApp.Models;
 using GreenhouseApp.Services;
 using LiveChartsCore;
@@ -60,12 +59,12 @@ public partial class DetailUserControlViewModel : ViewModelBase
     private readonly ObservableCollection<DateTimePoint> _humidity1Points = [];
     private readonly ObservableCollection<DateTimePoint> _humidity2Points = [];
 
-    private ISeries[] _soilSeries = null!;
-    private ISeries[] _temperatureSeries = null!;
-    private ISeries[] _humiditySeries = null!;
-    private Axis[] _soilYAxes = null!;
-    private Axis[] _temperatureYAxes = null!;
-    private Axis[] _humidityYAxes = null!;
+    private readonly ISeries[] _soilSeries;
+    private readonly ISeries[] _temperatureSeries;
+    private readonly ISeries[] _humiditySeries;
+    private readonly Axis[] _soilYAxes;
+    private readonly Axis[] _temperatureYAxes;
+    private readonly Axis[] _humidityYAxes;
 
     public int DeviceId { get; set; } = 1;
 
@@ -370,8 +369,7 @@ public partial class DetailUserControlViewModel : ViewModelBase
     private void ShowHumidityChart() =>
         ShowChart("ИСТОРИЯ ВЛАЖНОСТИ ВОЗДУХА", false, false, true, _humiditySeries, _humidityYAxes);
 
-    [RelayCommand]
-    private async Task Refresh() => await RefreshAsync();
+    [RelayCommand] private async Task RefreshChart() => await RefreshAsync();
 
     [RelayCommand]
     private void TogglePause()
@@ -400,7 +398,7 @@ public partial class DetailUserControlViewModel : ViewModelBase
         else
             await _api.SendCommandAsync(DeviceId, action);
         
-        Log.Information("Device: {deviceId} Command sent: {action}", DeviceId, action);
+        Log.Information("Device: {DeviceId} Command sent: {Action}", DeviceId, action);
     }
     
     [RelayCommand] private async Task PumpOn()  => await SendCommand("pump_on");
