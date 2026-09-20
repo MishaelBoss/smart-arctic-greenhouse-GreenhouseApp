@@ -56,7 +56,7 @@
 
       <!-- ДВА DHT -->
       <Border Grid.Column="1" Classes="card">
-        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto">
           <StackPanel Grid.Row="0" Grid.Column="0">
             <TextBlock Text="ДАТЧИК 1 · ТЕМП." Classes="label"/>
             <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
@@ -84,6 +84,21 @@
             <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
               <Run Text="{Binding Humidity2, StringFormat={}{0:F0}}"/>
               <Run Text="%"/>
+            </TextBlock>
+          </StackPanel>
+
+          <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,12,0,0">
+            <TextBlock Text="ДАТЧИК 1 · СВЕТ" Classes="label"/>
+            <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
+              <Run Text="{Binding Light1, StringFormat={}{0:F0}}"/>
+              <Run Text=" lux"/>
+            </TextBlock>
+          </StackPanel>
+          <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,12,0,0">
+            <TextBlock Text="ДАТЧИК 2 · СВЕТ" Classes="label"/>
+            <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
+              <Run Text="{Binding Light2, StringFormat={}{0:F0}}"/>
+              <Run Text=" lux"/>
             </TextBlock>
           </StackPanel>
         </Grid>

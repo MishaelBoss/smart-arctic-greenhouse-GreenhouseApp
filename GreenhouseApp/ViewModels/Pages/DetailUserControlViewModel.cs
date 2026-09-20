@@ -36,6 +36,8 @@ public partial class DetailUserControlViewModel : ViewModelBase
     [ObservableProperty] private double _humidity1;
     [ObservableProperty] private double _temperature2;
     [ObservableProperty] private double _humidity2;
+    [ObservableProperty] private int _light1;
+    [ObservableProperty] private int _light2;
     [ObservableProperty] private string _status = "Ожидание данных...";
     [ObservableProperty] private string _connectionStatus = "● Подключение...";
     [ObservableProperty] private string _lastUpdate = "--:--:--";
@@ -225,6 +227,8 @@ public partial class DetailUserControlViewModel : ViewModelBase
         Humidity1 = 0;
         Temperature2 = 0;
         Humidity2 = 0;
+        Light1 = 0;
+        Light2 = 0;
         LastUpdate = "--:--:--";
 
         _soil1Points.Clear();
@@ -314,6 +318,8 @@ public partial class DetailUserControlViewModel : ViewModelBase
         Humidity1 = latest.Humidity1 ?? 0;
         Temperature2 = latest.Temperature2 ?? 0;
         Humidity2 = latest.Humidity2 ?? 0;
+        Light1 = latest.Light1 ?? 0;
+        Light2 = latest.Light2 ?? 0;
         LastUpdate = DateTime.Now.ToString("HH:mm:ss");
 
         if (!IsChartPaused && latest.IsFresh)
