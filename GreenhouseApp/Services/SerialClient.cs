@@ -56,11 +56,16 @@ public class SerialClient : IDisposable
 
                 if (line.StartsWith("{") && line.EndsWith("}"))
                 {
-                    var t = JsonSerializer.Deserialize<Telemetry>(line);
-                    if (t != null)
+                    try
                     {
+                        var t = JsonSerializer.Deserialize<Telemetry>(line);
+                        if (t == null) continue;
                         t.Timestamp = DateTime.UtcNow;
                         lock (_lock) _lastTelemetry = t;
+                    }
+                    catch (JsonException)
+                    {
+                        Log.Debug("Ignored non-JSON or partial serial line: {Line}", line);
                     }
                 }
             }
@@ -189,7 +194,7 @@ public class SerialClient : IDisposable
                 port.DiscardInBuffer();
 
                 var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
-                bool found = false;
+                var found = false;
 
                 while (DateTime.UtcNow < deadline && !found)
                 {
