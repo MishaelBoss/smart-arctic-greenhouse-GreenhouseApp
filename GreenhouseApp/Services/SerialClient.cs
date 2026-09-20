@@ -28,8 +28,8 @@ public class SerialClient : IDisposable
             {
                 ReadTimeout = 1500,
                 NewLine = "\n",
-                DtrEnable = true,
-                RtsEnable = true
+                DtrEnable = false,
+                RtsEnable = false
             };
             _port.Open();
 

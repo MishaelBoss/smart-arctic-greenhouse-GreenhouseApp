@@ -106,16 +106,9 @@ public partial class DetailUserControlViewModel : ViewModelBase
         
         _cts = UiTimerManager.UpdateUiAsync(RefreshAsync, TimeSpan.FromSeconds(2));
         
-        _ = RefreshAsync();
-        
-        WeakReferenceMessenger.Default.Register<OpenDetailPageMessage>(this, (_, msg) =>
-        {
-            Log.Information("LeftBoard: device selected {Id} ({Name}) connected via {ConnectionType}", msg.DeviceId, msg.DeviceName, msg.ConnectionType);
-            SetDevice(msg.DeviceId, msg.DeviceName, msg.ConnectionType);
-        });
     }
 
-    private void SetDevice(int deviceId, string deviceName, string connectionType = "wifi")
+    public void SetDevice(int deviceId, string deviceName, string connectionType = "wifi")
     {
         DeviceId = deviceId;
         DeviceName = deviceName;
@@ -175,30 +168,41 @@ public partial class DetailUserControlViewModel : ViewModelBase
     {
         Telemetry? latest;
 
-        if (_currentConnectionType == "usb" && _serial != null)
+        if (_currentConnectionType == "usb")
         {
-            latest = _serial.GetLatest();
-
-            if (latest == null)
+            if (_serial != null)
             {
-                ConnectionStatus = "● USB: ожидание";
-                ConnectionColor = "#FFC107";
-                Status = "Ожидание JSON от ESP32 (проверьте Serial Monitor закрыт)";
-                
-                Log.Warning("USB connection active, but waiting for JSON data from ESP32");
+                latest = _serial.GetLatest();
+                if (latest == null)
+                {
+                    ConnectionStatus = "● USB: ожидание данных";
+                    ConnectionColor = "#FFC107";
+                    Status = "Ожидание JSON от ESP32 по USB...";
+                    Log.Debug("USB connection active, but waiting for JSON data from ESP32");
+                    return;
+                }
+            }
+            else
+            {
+                ConnectionStatus = "● USB: порт не найден";
+                ConnectionColor = "#FF5252";
+                Status = "Не удалось найти порт ESP32 (проверьте кабель и Serial Monitor)";
+                Log.Warning("USB mode: ESP32 port not found");
                 return;
             }
         }
-        else latest = await _api.GetLatestAsync(DeviceId);
-
-        if (latest == null)
+        else
         {
-            ConnectionStatus = "● Нет данных";
-            ConnectionColor = "#FF5252"; 
-            Status = "Ожидание первого измерения";
-            
-            Log.Warning("Fetch latest telemetry failed. DeviceId: {DeviceId}", DeviceId);
-            return;
+            latest = await _api.GetLatestAsync(DeviceId);
+            if (latest == null)
+            {
+                ConnectionStatus = "● Нет данных";
+                ConnectionColor = "#FF5252"; 
+                Status = "Ожидание первого измерения";
+                
+                Log.Warning("Fetch latest telemetry failed. DeviceId: {DeviceId}", DeviceId);
+                return;
+            }
         }
         
         if (!latest.IsFresh)

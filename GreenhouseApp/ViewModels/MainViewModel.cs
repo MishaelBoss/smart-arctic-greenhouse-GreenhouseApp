@@ -55,8 +55,10 @@ public partial class MainViewModel : ViewModelBase, IRecipient<OpenDetailPageMes
 
     public void Receive(OpenDetailPageMessage message)
     {
-        Log.Information("Main: received OpenDetailPageMessage for device {Id}", message.DeviceId);
-        CurrentPage = _detail.Value;
+        Log.Information("Main: received OpenDetailPageMessage for device {Id} ({Name}) [{ConnectionType}]", message.DeviceId, message.DeviceName, message.ConnectionType);
+        var detailVm = _detail.Value;
+        detailVm.SetDevice(message.DeviceId, message.DeviceName, message.ConnectionType);
+        CurrentPage = detailVm;
         WeakReferenceMessenger.Default.Send(new PageChangedMessage(PageType.Detail));
     }
     
