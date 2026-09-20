@@ -29,10 +29,14 @@ public partial class DetailUserControlViewModel : ViewModelBase
     
     [ObservableProperty] private double _soil1Moisture;
     [ObservableProperty] private int    _soil1Raw;
-    [ObservableProperty] private double _soil2Moisture;
-    [ObservableProperty] private int    _soil2Raw;
-    [ObservableProperty] private double _temperature;
-    [ObservableProperty] private double _humidity;
+    [ObservableProperty] private double _sensor1Moisture;
+    [ObservableProperty] private int    _sensor1Raw;
+    [ObservableProperty] private double _sensor2Moisture;
+    [ObservableProperty] private int    _sensor2Raw;
+    [ObservableProperty] private double _temperature1;
+    [ObservableProperty] private double _humidity1;
+    [ObservableProperty] private double _temperature2;
+    [ObservableProperty] private double _humidity2;
     [ObservableProperty] private string _status = "Ожидание данных...";
     [ObservableProperty] private string _connectionStatus = "● Подключение...";
     [ObservableProperty] private string _lastUpdate = "--:--:--";
@@ -112,18 +116,20 @@ public partial class DetailUserControlViewModel : ViewModelBase
     {
         DeviceId = deviceId;
         DeviceName = deviceName;
-        _currentConnectionType = connectionType.ToLower();
 
-        _serial?.Dispose();
-        _serial = null;
+        var newType = connectionType.ToLower();
 
-        if (_currentConnectionType == "usb")
+        if (newType == "usb" && _currentConnectionType == "usb" && _serial is { IsOpen: true })
         {
-            if (_serial is { IsOpen: true })
-            {
-                Log.Information("USB mode: reusing existing port {Port}", _serial.PortName);
-            }
-            else
+            Log.Information("USB mode: reusing existing port {Port}", _serial.PortName);
+        }
+        else
+        {
+            _serial?.Dispose();
+            _serial = null;
+            _currentConnectionType = newType;
+
+            if (_currentConnectionType == "usb")
             {
                 var portName = SerialClient.FindEsp32Port();
                 if (portName != null)
@@ -140,18 +146,15 @@ public partial class DetailUserControlViewModel : ViewModelBase
                 }
             }
         }
-        else
-        {
-            _serial?.Dispose();
-            _serial = null;
-        }
-        
-        Soil1Moisture = 0;
-        Soil1Raw = 0;
-        Soil2Moisture = 0;
-        Soil2Raw = 0;
-        Temperature = 0;
-        Humidity = 0;
+
+        Sensor1Moisture = 0;
+        Sensor1Raw = 0;
+        Sensor2Moisture = 0;
+        Sensor2Raw = 0;
+        Temperature1 = 0;
+        Humidity1 = 0;
+        Temperature2 = 0;
+        Humidity2 = 0;
         LastUpdate = "--:--:--";
 
         _soil1Points.Clear();
@@ -219,7 +222,7 @@ public partial class DetailUserControlViewModel : ViewModelBase
         {
             ConnectionStatus = "● Онлайн";
             ConnectionColor = "#4CAF50";
-            Status = (latest.Soil1Moisture, latest.Soil2Moisture) switch
+            Status = (latest.Sensor1Moisture, latest.Sensor2Moisture) switch
             {
                 ( < 30, < 70) => "⚠ Верхний сухой — полив включён",
                 ( < 30, >= 70) => "💧 Вода дошла до корней",
@@ -228,25 +231,28 @@ public partial class DetailUserControlViewModel : ViewModelBase
             };
         }
         
-        Soil1Moisture = latest.Soil1Moisture;
-        Soil1Raw = latest.Soil1Raw;
-        Soil2Moisture = latest.Soil2Moisture;
-        Soil2Raw = latest.Soil2Raw;
-        Temperature = latest.Temperature ?? 0;
-        Humidity = latest.Humidity ?? 0;
+        Sensor1Moisture = latest.Sensor1Moisture;
+        Sensor1Raw = latest.Sensor1Raw;
+        Sensor2Moisture = latest.Sensor2Moisture;
+        Sensor2Raw = latest.Sensor2Raw;
+
+        Temperature1 = latest.Temperature1 ?? 0;
+        Humidity1 = latest.Humidity1 ?? 0;
+        Temperature2 = latest.Temperature2 ?? 0;
+        Humidity2 = latest.Humidity2 ?? 0;
         LastUpdate = DateTime.Now.ToString("HH:mm:ss");
 
         if (!IsChartPaused && latest.IsFresh)
         {
             var time = DateTime.Now;
-            _soil1Points.Add(new DateTimePoint(time, latest.Soil1Moisture));
-            _soil2Points.Add(new DateTimePoint(time, latest.Soil2Moisture));
+            _soil1Points.Add(new DateTimePoint(time, latest.Sensor1Moisture));
+            _soil2Points.Add(new DateTimePoint(time, latest.Sensor2Moisture));
 
             while (_soil1Points.Count > 60) _soil1Points.RemoveAt(0);
             while (_soil2Points.Count > 60) _soil2Points.RemoveAt(0);
             
             Log.Debug("Chart updated for {DeviceId}. S1: {Soil1:F1}%, S2: {Soil2:F1}%, Points count: {Count}", 
-                DeviceId, latest.Soil1Moisture, latest.Soil2Moisture, _soil1Points.Count);
+                DeviceId, latest.Sensor1Moisture, latest.Sensor2Moisture, _soil1Points.Count);
         }
     }
     
