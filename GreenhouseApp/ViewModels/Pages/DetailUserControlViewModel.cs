@@ -44,13 +44,28 @@ public partial class DetailUserControlViewModel : ViewModelBase
     [ObservableProperty] private string _deviceName = "Теплица";
     [ObservableProperty] private bool   _isChartPaused;
     [ObservableProperty] private bool   _isChartResumed = true;
-    
+
+    [ObservableProperty] private bool _isSoilChart = true;
+    [ObservableProperty] private bool _isTemperatureChart;
+    [ObservableProperty] private bool _isHumidityChart;
+    [ObservableProperty] private string _chartTitle = "ИСТОРИЯ ВЛАЖНОСТИ ПОЧВЫ";
+    [ObservableProperty] private ISeries[] _series = [];
+    [ObservableProperty] private Axis[] _xAxes = [];
+    [ObservableProperty] private Axis[] _yAxes = [];
+
     private readonly ObservableCollection<DateTimePoint> _soil1Points = [];
     private readonly ObservableCollection<DateTimePoint> _soil2Points = [];
+    private readonly ObservableCollection<DateTimePoint> _temperature1Points = [];
+    private readonly ObservableCollection<DateTimePoint> _temperature2Points = [];
+    private readonly ObservableCollection<DateTimePoint> _humidity1Points = [];
+    private readonly ObservableCollection<DateTimePoint> _humidity2Points = [];
 
-    public ISeries[] Series { get; }
-    public Axis[] XAxes { get; }
-    public Axis[] YAxes { get; }
+    private ISeries[] _soilSeries = null!;
+    private ISeries[] _temperatureSeries = null!;
+    private ISeries[] _humiditySeries = null!;
+    private Axis[] _soilYAxes = null!;
+    private Axis[] _temperatureYAxes = null!;
+    private Axis[] _humidityYAxes = null!;
 
     public int DeviceId { get; set; } = 1;
 
@@ -60,11 +75,11 @@ public partial class DetailUserControlViewModel : ViewModelBase
 
         IsActive = true;
 
-        Series =
+        _soilSeries =
         [
             new LineSeries<DateTimePoint>
             {
-                Name = "Верхний датчик",
+                Name = "Датчик 1",
                 Values = _soil1Points,
                 Fill = null,
                 Stroke = new SolidColorPaint(SKColor.Parse("#4FC3F7"), 3),
@@ -73,7 +88,7 @@ public partial class DetailUserControlViewModel : ViewModelBase
             },
             new LineSeries<DateTimePoint>
             {
-                Name = "Нижний датчик",
+                Name = "Датчик 2",
                 Values = _soil2Points,
                 Fill = null,
                 Stroke = new SolidColorPaint(SKColor.Parse("#4CAF50"), 3),
@@ -81,7 +96,51 @@ public partial class DetailUserControlViewModel : ViewModelBase
                 LineSmoothness = 0.5
             }
         ];
-        
+
+        _temperatureSeries =
+        [
+            new LineSeries<DateTimePoint>
+            {
+                Name = "Датчик 1 · Температура",
+                Values = _temperature1Points,
+                Fill = null,
+                Stroke = new SolidColorPaint(SKColor.Parse("#FFB74D"), 3),
+                GeometrySize = 8,
+                LineSmoothness = 0.5
+            },
+            new LineSeries<DateTimePoint>
+            {
+                Name = "Датчик 2 · Температура",
+                Values = _temperature2Points,
+                Fill = null,
+                Stroke = new SolidColorPaint(SKColor.Parse("#F06292"), 3),
+                GeometrySize = 8,
+                LineSmoothness = 0.5
+            }
+        ];
+
+        _humiditySeries =
+        [
+            new LineSeries<DateTimePoint>
+            {
+                Name = "Датчик 1 · Влажность",
+                Values = _humidity1Points,
+                Fill = null,
+                Stroke = new SolidColorPaint(SKColor.Parse("#81D4FA"), 3),
+                GeometrySize = 8,
+                LineSmoothness = 0.5
+            },
+            new LineSeries<DateTimePoint>
+            {
+                Name = "Датчик 2 · Влажность",
+                Values = _humidity2Points,
+                Fill = null,
+                Stroke = new SolidColorPaint(SKColor.Parse("#AED581"), 3),
+                GeometrySize = 8,
+                LineSmoothness = 0.5
+            }
+        ];
+
         XAxes =
         [
             new DateTimeAxis(TimeSpan.FromSeconds(30), date => date.ToString("HH:mm:ss"))
@@ -93,23 +152,35 @@ public partial class DetailUserControlViewModel : ViewModelBase
             }
         ];
 
-        YAxes =
+        _soilYAxes = CreateYAxes(max: 100, labeler: value => $"{value:F0}%");
+
+        _temperatureYAxes = CreateYAxes(max: 50, labeler: value => $"{value:F0}°C");
+
+        _humidityYAxes = CreateYAxes(max: 100, labeler: value => $"{value:F0}%");
+
+        Series = _soilSeries;
+        YAxes = _soilYAxes;
+
+        _cts = UiTimerManager.UpdateUiAsync(RefreshAsync, TimeSpan.FromSeconds(2));
+        
+    }
+
+    private static Axis[] CreateYAxes(double max, Func<double, string> labeler)
+    {
+        return
         [
             new Axis
             {
                 MinLimit = 0,
-                MaxLimit = 100,
-                ForceStepToMin = true, 
-                MinStep = 20, 
-                Labeler = value => $"{value:F0}%",
+                MaxLimit = max,
+                ForceStepToMin = true,
+                MinStep = 10,
+                Labeler = labeler,
                 LabelsPaint = new SolidColorPaint(SKColor.Parse("#7FB3D5")),
                 SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#1A3A5C")),
                 TextSize = 11
             }
         ];
-        
-        _cts = UiTimerManager.UpdateUiAsync(RefreshAsync, TimeSpan.FromSeconds(2));
-        
     }
 
     public void SetDevice(int deviceId, string deviceName, string connectionType = "wifi")
@@ -159,6 +230,10 @@ public partial class DetailUserControlViewModel : ViewModelBase
 
         _soil1Points.Clear();
         _soil2Points.Clear();
+        _temperature1Points.Clear();
+        _temperature2Points.Clear();
+        _humidity1Points.Clear();
+        _humidity2Points.Clear();
 
         ConnectionStatus = "● Подключение...";
         ConnectionColor = "#7FB3D5";
@@ -248,14 +323,53 @@ public partial class DetailUserControlViewModel : ViewModelBase
             _soil1Points.Add(new DateTimePoint(time, latest.Sensor1Moisture));
             _soil2Points.Add(new DateTimePoint(time, latest.Sensor2Moisture));
 
+            if (latest.Temperature1.HasValue)
+                _temperature1Points.Add(new DateTimePoint(time, latest.Temperature1.Value));
+            if (latest.Temperature2.HasValue)
+                _temperature2Points.Add(new DateTimePoint(time, latest.Temperature2.Value));
+
+            if (latest.Humidity1.HasValue)
+                _humidity1Points.Add(new DateTimePoint(time, latest.Humidity1.Value));
+            if (latest.Humidity2.HasValue)
+                _humidity2Points.Add(new DateTimePoint(time, latest.Humidity2.Value));
+
             while (_soil1Points.Count > 60) _soil1Points.RemoveAt(0);
             while (_soil2Points.Count > 60) _soil2Points.RemoveAt(0);
-            
-            Log.Debug("Chart updated for {DeviceId}. S1: {Soil1:F1}%, S2: {Soil2:F1}%, Points count: {Count}", 
-                DeviceId, latest.Sensor1Moisture, latest.Sensor2Moisture, _soil1Points.Count);
+            while (_temperature1Points.Count > 60) _temperature1Points.RemoveAt(0);
+            while (_temperature2Points.Count > 60) _temperature2Points.RemoveAt(0);
+            while (_humidity1Points.Count > 60) _humidity1Points.RemoveAt(0);
+            while (_humidity2Points.Count > 60) _humidity2Points.RemoveAt(0);
+
+            Log.Debug("Chart updated for {DeviceId}. S1: {Soil1:F1}%, S2: {Soil2:F1}%, Temp1: {T1:F1}°C, Hum1: {H1:F1}%, Points count: {Count}",
+                DeviceId, latest.Sensor1Moisture, latest.Sensor2Moisture,
+                latest.Temperature1 ?? 0, latest.Humidity1 ?? 0, _soil1Points.Count);
         }
     }
-    
+
+    private void ShowChart(string title, bool soil, bool temperature, bool humidity,
+        ISeries[] series, Axis[] yAxes)
+    {
+        ChartTitle = title;
+        IsSoilChart = soil;
+        IsTemperatureChart = temperature;
+        IsHumidityChart = humidity;
+        Series = series;
+        YAxes = yAxes;
+        Log.Information("Chart switched to: {Title}", title);
+    }
+
+    [RelayCommand]
+    private void ShowSoilChart() =>
+        ShowChart("ИСТОРИЯ ВЛАЖНОСТИ ПОЧВЫ", true, false, false, _soilSeries, _soilYAxes);
+
+    [RelayCommand]
+    private void ShowTemperatureChart() =>
+        ShowChart("ИСТОРИЯ ТЕМПЕРАТУРЫ", false, true, false, _temperatureSeries, _temperatureYAxes);
+
+    [RelayCommand]
+    private void ShowHumidityChart() =>
+        ShowChart("ИСТОРИЯ ВЛАЖНОСТИ ВОЗДУХА", false, false, true, _humiditySeries, _humidityYAxes);
+
     [RelayCommand]
     private void TogglePause()
     {
@@ -269,6 +383,10 @@ public partial class DetailUserControlViewModel : ViewModelBase
     {
         _soil1Points.Clear();
         _soil2Points.Clear();
+        _temperature1Points.Clear();
+        _temperature2Points.Clear();
+        _humidity1Points.Clear();
+        _humidity2Points.Clear();
         Log.Information("Chart cleared");
     }
     

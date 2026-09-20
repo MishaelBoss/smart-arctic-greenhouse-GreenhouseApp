@@ -111,25 +111,81 @@
     <!-- ГРАФИК -->
     <Border Grid.Row="3" Classes="card" Margin="0,0,0,12">
       <Grid RowDefinitions="Auto,*">
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto">
-          <TextBlock Grid.Column="0" Text="ИСТОРИЯ ВЛАЖНОСТИ ПОЧВЫ"
-                     Classes="label"/>
-          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16" Margin="24,0,16,0">
-            <StackPanel Orientation="Horizontal" Spacing="6">
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto">
+          <TextBlock Grid.Column="0" Text="{Binding ChartTitle}" Classes="label"
+                     VerticalAlignment="Center"/>
+
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0"
+                      VerticalAlignment="Center" HorizontalAlignment="Left">
+            <Button Classes="tab" Command="{Binding ShowSoilChartCommand}"
+                    ToolTip.Tip="Влажность почвы">
+              <StackPanel Orientation="Vertical" Spacing="3">
+                <TextBlock Text="Почва" Foreground="White" FontSize="12"/>
+                <Border Height="2" CornerRadius="1" Background="#4FC3F7"
+                        IsVisible="{Binding IsSoilChart}"/>
+              </StackPanel>
+            </Button>
+            <Button Classes="tab" Command="{Binding ShowTemperatureChartCommand}"
+                    ToolTip.Tip="Температура DHT">
+              <StackPanel Orientation="Vertical" Spacing="3">
+                <TextBlock Text="Температура" Foreground="White" FontSize="12"/>
+                <Border Height="2" CornerRadius="1" Background="#FFB74D"
+                        IsVisible="{Binding IsTemperatureChart}"/>
+              </StackPanel>
+            </Button>
+            <Button Classes="tab" Command="{Binding ShowHumidityChartCommand}"
+                    ToolTip.Tip="Влажность воздуха DHT">
+              <StackPanel Orientation="Vertical" Spacing="3">
+                <TextBlock Text="Влажность" Foreground="White" FontSize="12"/>
+                <Border Height="2" CornerRadius="1" Background="#81D4FA"
+                        IsVisible="{Binding IsHumidityChart}"/>
+              </StackPanel>
+            </Button>
+          </StackPanel>
+
+          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="16" Margin="24,0,16,0">
+
+            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsSoilChart}">
               <Border Width="12" Height="12" Background="#4FC3F7"
                       CornerRadius="6" VerticalAlignment="Center"/>
               <TextBlock Text="Датчик 1" Foreground="#7FB3D5"
                          FontSize="11" VerticalAlignment="Center"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Spacing="6">
+            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsSoilChart}">
               <Border Width="12" Height="12" Background="#4CAF50"
+                      CornerRadius="6" VerticalAlignment="Center"/>
+              <TextBlock Text="Датчик 2" Foreground="#7FB3D5"
+                         FontSize="11" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsTemperatureChart}">
+              <Border Width="12" Height="12" Background="#FFB74D"
+                      CornerRadius="6" VerticalAlignment="Center"/>
+              <TextBlock Text="Датчик 1" Foreground="#7FB3D5"
+                         FontSize="11" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsTemperatureChart}">
+              <Border Width="12" Height="12" Background="#F06292"
+                      CornerRadius="6" VerticalAlignment="Center"/>
+              <TextBlock Text="Датчик 2" Foreground="#7FB3D5"
+                         FontSize="11" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsHumidityChart}">
+              <Border Width="12" Height="12" Background="#81D4FA"
+                      CornerRadius="6" VerticalAlignment="Center"/>
+              <TextBlock Text="Датчик 1" Foreground="#7FB3D5"
+                         FontSize="11" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsHumidityChart}">
+              <Border Width="12" Height="12" Background="#AED581"
                       CornerRadius="6" VerticalAlignment="Center"/>
               <TextBlock Text="Датчик 2" Foreground="#7FB3D5"
                          FontSize="11" VerticalAlignment="Center"/>
             </StackPanel>
           </StackPanel>
 
-          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4"
+          <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="4"
                       VerticalAlignment="Center">
             <Button Classes="iconbtn" ToolTip.Tip="Пауза / Продолжить"
                     Command="{Binding TogglePauseCommand}">
