@@ -67,6 +67,7 @@ public partial class MainViewModel : ViewModelBase, IRecipient<OpenDetailPageMes
         IsActive = false;
         
         DisposePage(_detail);
+        DisposePage(_guideAddingGreenhouses);
 
         if (LeftBoardUserControlViewModel is IDisposable rightBoardDisposable)
             rightBoardDisposable.Dispose();

@@ -371,6 +371,9 @@ public partial class DetailUserControlViewModel : ViewModelBase
         ShowChart("ИСТОРИЯ ВЛАЖНОСТИ ВОЗДУХА", false, false, true, _humiditySeries, _humidityYAxes);
 
     [RelayCommand]
+    private async Task Refresh() => await RefreshAsync();
+
+    [RelayCommand]
     private void TogglePause()
     {
         IsChartPaused = !IsChartPaused;
