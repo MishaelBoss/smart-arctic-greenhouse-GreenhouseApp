@@ -236,7 +236,7 @@ public partial class DetailUserControlViewModel : ViewModelBase
         Humidity = latest.Humidity ?? 0;
         LastUpdate = DateTime.Now.ToString("HH:mm:ss");
 
-        if (!IsChartPaused)
+        if (!IsChartPaused && latest.IsFresh)
         {
             var time = DateTime.Now;
             _soil1Points.Add(new DateTimePoint(time, latest.Soil1Moisture));

@@ -24,12 +24,19 @@
                 <ItemsControl ItemsSource="{Binding Buttons}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:DashboardButtonViewModel">
-                            <Button Command="{Binding Command}" Width="185" Height="40" Classes="BTN">
-                                <StackPanel Orientation="Horizontal">
-                                    <Svg Path="{Binding IconPath}" Width="20" Height="20" Stretch="Uniform"/>
-                                    <TextBlock Text="{Binding ButtonText}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                                    <Border Background="{Binding StatusColor}" CornerRadius="50" Width="10" Height="10" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                                </StackPanel>
+                            <Button Command="{Binding Command}" Width="185" Height="40" Classes="BTN"
+                                    Background="{Binding ButtonBackground}"
+                                    BorderBrush="{Binding BorderColor}"
+                                    BorderThickness="1.5"
+                                    CornerRadius="8"
+                                    Padding="8,0"
+                                    Margin="0,2">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <Svg Grid.Column="0" Path="{Binding IconPath}" Width="18" Height="18" Stretch="Uniform" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding ButtonText}" VerticalAlignment="Center" Margin="8,0,0,0"
+                                               Foreground="White" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                                    <Border Grid.Column="2" Background="{Binding StatusColor}" CornerRadius="50" Width="9" Height="9" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                </Grid>
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

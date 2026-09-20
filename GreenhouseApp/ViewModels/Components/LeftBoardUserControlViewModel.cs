@@ -62,6 +62,11 @@ public partial class LeftBoardUserControlViewModel : ViewModelBase
                     connectionType
                 );
 
+                if (SelectedDeviceId == capturedId)
+                {
+                    btn.IsSelected = true;
+                }
+
                 Buttons.Add(btn);
             }
 
@@ -94,6 +99,10 @@ public partial class LeftBoardUserControlViewModel : ViewModelBase
     private Task SelectDeviceAsync(int deviceId, string deviceName, string connectionType = "wifi")
     {
         SelectedDeviceId = deviceId;
+        foreach (var btn in Buttons)
+        {
+            btn.IsSelected = (btn.DeviceId == deviceId && btn.ConnectionType.Equals(connectionType, StringComparison.OrdinalIgnoreCase));
+        }
         WeakReferenceMessenger.Default.Send(new OpenDetailPageMessage(deviceId, deviceName, connectionType));
         Log.Information("LeftBoard: device selected {Id} ({Name}) [{Type}]", deviceId, deviceName, connectionType);
         return Task.CompletedTask;
@@ -103,7 +112,15 @@ public partial class LeftBoardUserControlViewModel : ViewModelBase
     public void RefreshDevices() => _ = LoadDevicesAsync();
 
     [RelayCommand]
-    public void OpenGuideAddingGreenhouses() => WeakReferenceMessenger.Default.Send(new OpenGuideAddingGreenhouses());
+    public void OpenGuideAddingGreenhouses()
+    {
+        SelectedDeviceId = -1;
+        foreach (var btn in Buttons)
+        {
+            btn.IsSelected = false;
+        }
+        WeakReferenceMessenger.Default.Send(new OpenGuideAddingGreenhouses());
+    }
     
     [RelayCommand]
     public void OpenSettings()
