@@ -1,0 +1,158 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GreenhouseApp.ViewModels.Pages"
+             xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:DetailUserControlViewModel"
+             x:Class="GreenhouseApp.Views.Pages.DetailUserControlView">
+  <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" Margin="20">
+
+      <!-- HEADER -->
+      <StackPanel Grid.Row="0" Margin="0,0,0,16">
+        <Grid ColumnDefinitions="Auto, Auto">
+          <Image Grid.Column="0" 
+                 Width="128" Height="128" 
+                 Source="/Assets/arctic-2035.png" 
+                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          <TextBlock Grid.Column="1" Text="SMART GREENHOUSE"
+                     Foreground="White" FontSize="26" FontWeight="Bold"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+        <TextBlock Text="{Binding DeviceName}"
+                   Foreground="White" FontSize="14" FontWeight="Bold"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </StackPanel>
+
+      <!-- ВЛАЖНОСТЬ + КЛИМАТ -->
+      <Grid Grid.Row="1" ColumnDefinitions="460,*" Margin="0,0,0,12">
+
+        <Border Grid.Column="0" Classes="card" Margin="0,0,12,0">
+          <StackPanel>
+            <TextBlock Text="ВЛАЖНОСТЬ ПОЧВЫ" Classes="label"/>
+
+            <Grid ColumnDefinitions="*,*" Margin="0,8,0,0">
+              <StackPanel Grid.Column="0">
+                <TextBlock Text="ВЕРХНИЙ" Foreground="#7FB3D5" FontSize="10"/>
+                <TextBlock FontSize="32" FontWeight="Bold" Foreground="White">
+                  <Run Text="{Binding Soil1Moisture, StringFormat={}{0:F1}}"/>
+                  <Run Text="%"/>
+                </TextBlock>
+                <TextBlock Text="{Binding Soil1Raw, StringFormat='RAW: {0}'}"
+                           Foreground="#888" FontSize="10"/>
+              </StackPanel>
+
+              <StackPanel Grid.Column="1">
+                <TextBlock Text="НИЖНИЙ" Foreground="#7FB3D5" FontSize="10"/>
+                <TextBlock FontSize="32" FontWeight="Bold" Foreground="White">
+                  <Run Text="{Binding Soil2Moisture, StringFormat={}{0:F1}}"/>
+                  <Run Text="%"/>
+                </TextBlock>
+                <TextBlock Text="{Binding Soil2Raw, StringFormat='RAW: {0}'}"
+                           Foreground="#888" FontSize="10"/>
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Classes="card">
+          <Grid ColumnDefinitions="*,*">
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="ТЕМПЕРАТУРА" Classes="label"/>
+              <TextBlock Classes="value" Margin="0,8,0,0">
+                <Run Text="{Binding Temperature, StringFormat={}{0:F1}}"/>
+                <Run Text="°C"/>
+              </TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="ВЛАЖНОСТЬ ВОЗДУХА" Classes="label"/>
+              <TextBlock Classes="value" Margin="0,8,0,0">
+                <Run Text="{Binding Humidity, StringFormat={}{0:F0}}"/>
+                <Run Text="%"/>
+              </TextBlock>
+            </StackPanel>
+          </Grid>
+        </Border>
+      </Grid>
+
+      <!-- УПРАВЛЕНИЕ -->
+      <Border Grid.Row="2" Classes="card" Margin="0,0,0,12">
+        <StackPanel>
+          <TextBlock Text="УПРАВЛЕНИЕ" Classes="label" Margin="0,0,0,10"/>
+          <WrapPanel>
+            <Button Classes="cmd" Content="Полив ВКЛ"   Command="{Binding PumpOnCommand}"/>
+            <Button Classes="cmd" Content="Полив ВЫКЛ"  Command="{Binding PumpOffCommand}"/>
+            <Button Classes="cmd" Content="Крыша ОТКР"  Command="{Binding RoofOpenCommand}"/>
+            <Button Classes="cmd" Content="Крыша ЗАКР"  Command="{Binding RoofCloseCommand}"/>
+            <Button Classes="cmd" Content="Свет ВКЛ"    Command="{Binding LightOnCommand}"/>
+            <Button Classes="cmd" Content="Свет ВЫКЛ"   Command="{Binding LightOffCommand}"/>
+
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- ГРАФИК -->
+      <Border Grid.Row="3" Classes="card" Margin="0,0,0,12">
+        <Grid RowDefinitions="Auto,*">
+          <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto">
+            <TextBlock Grid.Column="0" Text="ИСТОРИЯ ВЛАЖНОСТИ ПОЧВЫ"
+                       Classes="label"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Border Width="12" Height="12" Background="#4FC3F7"
+                        CornerRadius="6" VerticalAlignment="Center"/>
+                <TextBlock Text="Верхний" Foreground="#7FB3D5"
+                           FontSize="11" VerticalAlignment="Center"/>
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Border Width="12" Height="12" Background="#4CAF50"
+                        CornerRadius="6" VerticalAlignment="Center"/>
+                <TextBlock Text="Нижний" Foreground="#7FB3D5"
+                           FontSize="11" VerticalAlignment="Center"/>
+              </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4"
+                        VerticalAlignment="Center">
+              <Button Classes="iconbtn" ToolTip.Tip="Пауза / Продолжить"
+                      Command="{Binding TogglePauseCommand}">
+                <Grid>
+                  <Image Source="{SvgImage /Assets/circle-pause.svg}"
+                         IsVisible="{Binding IsChartPaused}" Width="20" Height="20"/>
+                  <Image Source="{SvgImage /Assets/circle-play.svg}"
+                         IsVisible="{Binding IsChartResumed}" Width="20" Height="20"/>
+                </Grid>
+              </Button>
+              <Button Classes="iconbtn" ToolTip.Tip="Очистить график"
+                      Command="{Binding ClearChartCommand}">
+                <Image Source="{SvgImage /Assets/eraser.svg}" Width="20" Height="20"/>
+              </Button>
+            </StackPanel>
+          </Grid>
+
+          <avalonia:CartesianChart
+            Grid.Row="1"
+            Series="{Binding Series}"
+            XAxes="{Binding XAxes}"
+            YAxes="{Binding YAxes}"
+            Margin="0,12,0,0"
+            Height="220"
+            TooltipPosition="Top"/>
+        </Grid>
+      </Border>
+
+      <!-- FOOTER -->
+      <Border Grid.Row="4" Background="#102840" CornerRadius="12" Padding="16">
+        <Grid ColumnDefinitions="*,Auto,Auto">
+          <TextBlock Grid.Column="0" Text="{Binding Status}"
+                     Foreground="#FFC107" FontSize="14" FontWeight="SemiBold"/>
+          <TextBlock Grid.Column="1" Text="{Binding ConnectionStatus}"
+                     Foreground="{Binding ConnectionColor}"
+                     FontSize="13" Margin="0,0,16,0"/>
+          <TextBlock Grid.Column="2" Text="{Binding LastUpdate}"
+                     Foreground="#7FB3D5" FontSize="13"/>
+        </Grid>
+      </Border>
+    </Grid>
+</UserControl>

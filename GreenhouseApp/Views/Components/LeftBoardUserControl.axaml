@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GreenhouseApp.ViewModels.Components"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:LeftBoardUserControlViewModel"
+             x:Class="GreenhouseApp.Views.Components.LeftBoardUserControl">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/LeftBoardStyles.axaml"/>
+    </UserControl.Styles>
+    
+    <Grid>
+        <Border Background="Black" Opacity="0.3"/>
+        <Grid RowDefinitions="Auto,Auto,*,Auto">        
+            <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="0,0,0, 1" Height="64">
+                <StackPanel Spacing="10" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="SMART GREENHOUSE" FontSize="15" FontWeight="SemiBold" Foreground="White"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Grid.Row="2" Spacing="8" HorizontalAlignment="Left" Margin="7,10,0,0">
+                <ItemsControl ItemsSource="{Binding Buttons}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:DashboardButtonViewModel">
+                            <Button Command="{Binding Command}" Width="185" Height="40" Classes="BTN">
+                                <StackPanel Orientation="Horizontal">
+                                    <Svg Path="{Binding IconPath}" Width="20" Height="20" Stretch="Uniform"/>
+                                    <TextBlock Text="{Binding ButtonText}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="0,1,0,0" Padding="5">
+                <StackPanel Spacing="8" HorizontalAlignment="Left" Margin="2,0,0,0">
+                    <Button Command="{Binding RefreshDevicesCommand}" Width="185" Height="40" Classes="BTN">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{SvgImage /Assets/refresh-cw.svg}" Width="20" Height="20"/>
+                            <TextBlock Text="Обновить список" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding OpenGuideAddingGreenhousesCommand}" Width="185" Height="40" Classes="BTN">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{SvgImage /Assets/house.svg}" Width="20" Height="20"/>
+                            <TextBlock Text="Главаная" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding OpenSettingsCommand}" Width="185" Height="40" Classes="BTN">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{SvgImage /Assets/settings.svg}" Width="20" Height="20"/>
+                            <TextBlock Text="Настройки" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

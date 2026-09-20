@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenhouseApp", "GreenhouseApp\GreenhouseApp.csproj", "{24E4B98D-E6E8-4BEF-A24A-F2C94C13A321}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenhouseApp.Android", "GreenhouseApp.Android\GreenhouseApp.Android.csproj", "{35A51C88-0194-46EB-BAED-83383C0D78ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenhouseApp.Desktop", "GreenhouseApp.Desktop\GreenhouseApp.Desktop.csproj", "{14DE7F3F-A670-4956-85E6-6AAEC7D3E2EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenhouseApp.iOS", "GreenhouseApp.iOS\GreenhouseApp.iOS.csproj", "{34A573AF-0528-41BF-A55C-FFCC6A7268C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{24E4B98D-E6E8-4BEF-A24A-F2C94C13A321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24E4B98D-E6E8-4BEF-A24A-F2C94C13A321}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24E4B98D-E6E8-4BEF-A24A-F2C94C13A321}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24E4B98D-E6E8-4BEF-A24A-F2C94C13A321}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35A51C88-0194-46EB-BAED-83383C0D78ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35A51C88-0194-46EB-BAED-83383C0D78ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35A51C88-0194-46EB-BAED-83383C0D78ED}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{35A51C88-0194-46EB-BAED-83383C0D78ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35A51C88-0194-46EB-BAED-83383C0D78ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35A51C88-0194-46EB-BAED-83383C0D78ED}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{14DE7F3F-A670-4956-85E6-6AAEC7D3E2EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14DE7F3F-A670-4956-85E6-6AAEC7D3E2EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14DE7F3F-A670-4956-85E6-6AAEC7D3E2EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14DE7F3F-A670-4956-85E6-6AAEC7D3E2EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34A573AF-0528-41BF-A55C-FFCC6A7268C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34A573AF-0528-41BF-A55C-FFCC6A7268C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34A573AF-0528-41BF-A55C-FFCC6A7268C7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{34A573AF-0528-41BF-A55C-FFCC6A7268C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34A573AF-0528-41BF-A55C-FFCC6A7268C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34A573AF-0528-41BF-A55C-FFCC6A7268C7}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

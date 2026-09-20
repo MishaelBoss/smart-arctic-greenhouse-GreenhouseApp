@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GreenhouseApp.ViewModels.Settings"
+             x:DataType="vm:LoggingViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="GreenhouseApp.Views.Settings.LoggingView">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/SettingsStyles.axaml"/>
+    </UserControl.Styles>
+    
+    <StackPanel Spacing="20">
+        <TextBlock Text="Управление системными журналами и аутентификацией. Вы можете настроить уровень детализации или просмотреть файлы логов напрямую." 
+                   Foreground="#9E9EB0" 
+                   FontSize="13" 
+                   TextWrapping="Wrap"/>
+        
+        <Border BorderBrush="#2D2D30" BorderThickness="1" CornerRadius="8" Padding="16" Background="#151517">
+            <Grid ColumnDefinitions="*, Auto" VerticalAlignment="Center">
+                <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Text="Журналы работы приложения" FontSize="14" FontWeight="Medium" Foreground="White"/>
+                    <TextBlock Text="Открыть папку со всеми текстовыми файлами логов (.text)" Foreground="#777778" FontSize="12"/>
+                </StackPanel>
+                
+                <Button Grid.Column="1"
+                        Classes="Btn1"
+                        Command="{Binding OpenLogsFolderCommand}"
+                        Padding="16,8">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                        <Image Source="{SvgImage /Assets/folder-open.svg}" Width="12" Height="12"/>
+                        <TextBlock Text="Открыть логи"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,11 @@
+﻿<Solution>
+  <Project Path="GreenhouseApp.Android/GreenhouseApp.Android.csproj">
+    <Deploy />
+  </Project>
+  <Project Path="GreenhouseApp.Browser/GreenhouseApp.Browser.csproj" />
+  <Project Path="GreenhouseApp.Desktop/GreenhouseApp.Desktop.csproj" />
+  <Project Path="GreenhouseApp.iOS/GreenhouseApp.iOS.csproj">
+    <Deploy />
+  </Project>
+  <Project Path="GreenhouseApp/GreenhouseApp.csproj" />
+</Solution>
