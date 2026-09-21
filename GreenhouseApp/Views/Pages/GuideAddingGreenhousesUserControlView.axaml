@@ -1,0 +1,252 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GreenhouseApp.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:DataType="vm:GuideAddingGreenhousesUserControlViewModel"
+             x:Class="GreenhouseApp.Views.Pages.GuideAddingGreenhousesUserControlView">
+
+    <UserControl.Styles>
+        <Style Selector="Button.image-card-btn">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+        <Style Selector="Button.image-card-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style Selector="Button.image-card-btn:pointerover Border.image-wrapper">
+            <Setter Property="BorderBrush" Value="#4FC3F7"/>
+            <Setter Property="BoxShadow" Value="0 0 16 0 #404FC3F7"/>
+        </Style>
+        <Style Selector="Button.image-card-btn:pointerover Border.badge">
+            <Setter Property="Background" Value="#2563A8"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel MaxWidth="720" HorizontalAlignment="Center" Margin="24,24,24,40" Spacing="16">
+                
+                <TextBlock Text="Гайд по добавлению умной теплицы"
+                           Foreground="White" FontSize="24" FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+                
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Border Width="34" Height="34" CornerRadius="17" Background="#2563A8">
+                                <TextBlock Text="1" Foreground="White" FontWeight="Bold" FontSize="15"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Прошейте ESP32" Foreground="#E0F2FE" FontSize="17"
+                                       FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
+                        <TextBlock Foreground="#B8CEE0" FontSize="13" TextWrapping="Wrap" LineHeight="18">
+                            1. Установите Arduino IDE и добавьте поддержку ESP32 (Boards Manager → "esp32 by Espressif").<LineBreak/>
+                            2. Установите библиотеки: DHT sensor library, Adafruit SSD1306, ESP32Servo, ArduinoJson.<LineBreak/>
+                            3. Откройте скетч arduino/sketch_sep10a/sketch_sep10a.ino.<LineBreak/>
+                            4. Впишите свои WIFI_SSID и WIFI_PASS (сеть должна быть 2.4 ГГц).<LineBreak/>
+                            5. Выберите плату и COM-порт, нажмите «Загрузить».
+                        </TextBlock>
+                        
+                        <Button Command="{Binding OpenImageCommand}" CommandParameter="arduino-ide"
+                                Classes="image-card-btn" Margin="0,4,0,0">
+                            <Grid>
+                                <Border Classes="image-wrapper" Background="#0A1929" BorderBrush="#1A3A5C"
+                                        BorderThickness="1.5" CornerRadius="10" ClipToBounds="True">
+                                    <Image Source="/Assets/guide/arduino-ide.png" Height="260" Stretch="Uniform" Margin="8"/>
+                                </Border>
+                                <Border Classes="badge" Background="#CC0A1929" CornerRadius="6"
+                                        HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                        Margin="12" Padding="10,5">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <Svg Path="/Assets/eye.svg" 
+                                             Width="16" 
+                                             Height="16"/>
+                                        <TextBlock Text="Кликните для детального просмотра" Foreground="#E0F2FE" FontSize="11" FontWeight="Medium" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Border Width="34" Height="34" CornerRadius="17" Background="#2563A8">
+                                <TextBlock Text="2" Foreground="White" FontWeight="Bold" FontSize="15"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Подключите датчики и исполнителей" Foreground="#E0F2FE" FontSize="17"
+                                       FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
+                        <TextBlock Foreground="#B8CEE0" FontSize="13" TextWrapping="Wrap" LineHeight="18">
+                            Подключите компоненты к ESP32 по распиновке ниже. Реле активны низким уровнем (LOW = включено). Питание датчиков — 3.3 В.
+                        </TextBlock>
+                        
+                        <Border Background="#0F2540" BorderBrush="#1A3A5C" BorderThickness="1"
+                                CornerRadius="8" Padding="16,12">
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Датчик почвы 1" Foreground="#8FA8BF" FontSize="12" Margin="0,4"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="GPIO 34" Foreground="#4FC3F7" FontSize="12" FontWeight="SemiBold" Margin="0,4"/>
+                                
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Датчик почвы 2" Foreground="#8FA8BF" FontSize="12" Margin="0,4"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="GPIO 35" Foreground="#4FC3F7" FontSize="12" FontWeight="SemiBold" Margin="0,4"/>
+                                
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="DHT22 внутренний" Foreground="#8FA8BF" FontSize="12" Margin="0,4"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="GPIO 4" Foreground="#4FC3F7" FontSize="12" FontWeight="SemiBold" Margin="0,4"/>
+                                
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="DHT22 наружный" Foreground="#8FA8BF" FontSize="12" Margin="0,4"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="GPIO 25" Foreground="#4FC3F7" FontSize="12" FontWeight="SemiBold" Margin="0,4"/>
+                                
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Фоторезистор внутр. / наружн." Foreground="#8FA8BF" FontSize="12" Margin="0,4"/>
+                                <TextBlock Grid.Row="4" Grid.Column="1" Text="GPIO 32 / 33" Foreground="#4FC3F7" FontSize="12" FontWeight="SemiBold" Margin="0,4"/>
+                                
+                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Серво крыша · Насос · Свет" Foreground="#8FA8BF" FontSize="12" Margin="0,4"/>
+                                <TextBlock Grid.Row="5" Grid.Column="1" Text="GPIO 13 · 26 · 27" Foreground="#4FC3F7" FontSize="12" FontWeight="SemiBold" Margin="0,4"/>
+                            </Grid>
+                        </Border>
+                        
+                        <Button Command="{Binding OpenImageCommand}" CommandParameter="scheme"
+                                Classes="image-card-btn" Margin="0,4,0,0">
+                            <Grid>
+                                <Border Classes="image-wrapper" Background="#0A1929" BorderBrush="#1A3A5C"
+                                        BorderThickness="1.5" CornerRadius="10" ClipToBounds="True">
+                                    <Image Source="/Assets/guide/scheme.png" Height="280" Stretch="Uniform" Margin="8"/>
+                                </Border>
+                                <Border Classes="badge" Background="#CC0A1929" CornerRadius="6"
+                                        HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                        Margin="12" Padding="10,5">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <Svg Path="/Assets/eye.svg" 
+                                             Width="16" 
+                                             Height="16"/>
+                                        <TextBlock Text="Кликните для детального просмотра схемы" Foreground="#E0F2FE" FontSize="11" FontWeight="Medium" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Border Width="34" Height="34" CornerRadius="17" Background="#2563A8">
+                                <TextBlock Text="3" Foreground="White" FontWeight="Bold" FontSize="15"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Запустите сервер" Foreground="#E0F2FE" FontSize="17"
+                                       FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
+                        <TextBlock Foreground="#B8CEE0" FontSize="13" TextWrapping="Wrap" LineHeight="18">
+                            Backend разработан на FastAPI + PostgreSQL. Перейдите в папку backend/ и запустите:
+                        </TextBlock>
+                        
+                        <Border Background="#0A1929" BorderBrush="#1A3A5C" BorderThickness="1"
+                                CornerRadius="8" Padding="12">
+                            <TextBlock Text="uvicorn main:app --host 0.0.0.0 --port 8000"
+                                       Foreground="#4FC3F7" FontFamily="Consolas" FontSize="13"/>
+                        </Border>
+                        
+                        <TextBlock Foreground="#B8CEE0" FontSize="13" TextWrapping="Wrap" LineHeight="18">
+                            В прошивке параметр API_BASE должен указывать на IP компьютера с сервером (например http://192.168.0.115:8000).
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Border Width="34" Height="34" CornerRadius="17" Background="#2563A8">
+                                <TextBlock Text="4" Foreground="White" FontWeight="Bold" FontSize="15"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Добавьте теплицу в систему" Foreground="#E0F2FE" FontSize="17"
+                                       FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
+                        <TextBlock Foreground="#B8CEE0" FontSize="13" TextWrapping="Wrap" LineHeight="18">
+                            1. Зарегистрируйте устройство на сервере через POST /api/devices (укажите имя и connection_type: "wifi" или "usb"). В ответе придёт уникальный api_key.<LineBreak/>
+                            2. Впишите полученный ключ в прошивку (API_KEY и DEVICE_ID) и перепрошейте ESP32.<LineBreak/>
+                            3. Новая теплица мгновенно появится в списке слева в приложении.
+                        </TextBlock>
+                        
+                        <Button Command="{Binding OpenImageCommand}" CommandParameter="server-response"
+                                Classes="image-card-btn" Margin="0,4,0,0">
+                            <Grid>
+                                <Border Classes="image-wrapper" Background="#0A1929" BorderBrush="#1A3A5C"
+                                        BorderThickness="1.5" CornerRadius="10" ClipToBounds="True">
+                                    <Image Source="/Assets/guide/server-response.png" Height="160" Stretch="Uniform" Margin="8"/>
+                                </Border>
+                                <Border Classes="badge" Background="#CC0A1929" CornerRadius="6"
+                                        HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                        Margin="12" Padding="10,5">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <Svg Path="/Assets/eye.svg" 
+                                             Width="16" 
+                                             Height="16"/>
+                                        <TextBlock Text="Кликните для детального просмотра" Foreground="#E0F2FE" FontSize="11" FontWeight="Medium" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Border Width="34" Height="34" CornerRadius="17" Background="#2563A8">
+                                <TextBlock Text="5" Foreground="White" FontWeight="Bold" FontSize="15"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Проверьте связь" Foreground="#E0F2FE" FontSize="17"
+                                       FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
+                        <TextBlock Foreground="#B8CEE0" FontSize="13" TextWrapping="Wrap" LineHeight="18">
+                            Откройте страницу теплицы. При Wi-Fi данные приходят сами каждые 5 с.<LineBreak/>
+                            При USB — просто подключите кабель и убедитесь, что Serial Monitor в Arduino IDE закрыт.<LineBreak/>
+                            Зелёная точка у устройства в списке слева подтверждает, что данные реально поступают.
+                        </TextBlock>
+                        
+                        <TextBlock Foreground="#B8CEE0" FontSize="13" TextWrapping="Wrap" LineHeight="18">
+                            Всё готово: карточки датчиков обновляются в реальном времени, строятся графики истории, пишется лог событий, а ручное управление перехватывает автоматику на 60 секунд.
+                        </TextBlock>
+                        
+                        <Button Command="{Binding OpenImageCommand}" CommandParameter="data-page"
+                                Classes="image-card-btn" Margin="0,4,0,0">
+                            <Grid>
+                                <Border Classes="image-wrapper" Background="#0A1929" BorderBrush="#1A3A5C"
+                                        BorderThickness="1.5" CornerRadius="10" ClipToBounds="True">
+                                    <Image Source="/Assets/guide/data-page.png" Height="280" Stretch="Uniform" Margin="8"/>
+                                </Border>
+                                <Border Classes="badge" Background="#CC0A1929" CornerRadius="6"
+                                        HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                        Margin="12" Padding="10,5">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <Svg Path="/Assets/eye.svg" 
+                                             Width="16" 
+                                             Height="16"/>
+                                        <TextBlock Text="Кликните для детального просмотра" Foreground="#E0F2FE" FontSize="11" FontWeight="Medium" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

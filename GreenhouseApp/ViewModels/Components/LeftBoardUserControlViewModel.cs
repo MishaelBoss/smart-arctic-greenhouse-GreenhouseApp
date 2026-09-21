@@ -15,7 +15,7 @@ using Serilog;
 
 namespace GreenhouseApp.ViewModels.Components;
 
-public partial class LeftBoardUserControlViewModel : ViewModelBase
+public partial class LeftBoardUserControlViewModel : ViewModelBase, IDisposable
 {
     private readonly ApiClient _api = new();
     private CancellationTokenSource? _cts;
@@ -27,7 +27,7 @@ public partial class LeftBoardUserControlViewModel : ViewModelBase
     
     public LeftBoardUserControlViewModel() 
     {
-        Log.Information("Starting dashboard buttons initialization.");
+        Log.Information("Starting dashboard buttons initialization");
 
         IsActive = true;
         
@@ -54,7 +54,7 @@ public partial class LeftBoardUserControlViewModel : ViewModelBase
             {
                 var capturedId = device.Id;
                 var capturedName = device.Name;
-                var connectionType = device.ConnectionType ?? "wifi";
+                var connectionType = device.ConnectionType;
                 
                 var btn = new DashboardButtonViewModel(
                     capturedId,
@@ -140,7 +140,6 @@ public partial class LeftBoardUserControlViewModel : ViewModelBase
     [RelayCommand]
     public void RefreshDevices()
     {
-        // Принудительно пере-опрос USB-статуса при следующем цикле опроса
         _lastUsbProbeUtc = DateTime.MinValue;
         _ = LoadDevicesAsync();
     }

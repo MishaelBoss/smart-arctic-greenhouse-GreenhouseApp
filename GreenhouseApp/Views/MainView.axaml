@@ -18,6 +18,7 @@
     <Grid ColumnDefinitions="*, Auto">
         <Grid Grid.Column="0">
             <controls:FadeContentControl Content="{Binding CurrentPage}" ZIndex="0"/>
+            <controls:FadeContentControl Content="{Binding TopOverlayContent}" ZIndex="999"/>
             <ScrollViewer ZIndex="999" VerticalAlignment="Bottom" HorizontalAlignment="Right"
                           MaxHeight="300" Margin="12">
             </ScrollViewer>

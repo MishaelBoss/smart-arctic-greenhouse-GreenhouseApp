@@ -18,7 +18,7 @@ using SkiaSharp;
 
 namespace GreenhouseApp.ViewModels.Pages;
 
-public partial class DetailUserControlViewModel : ViewModelBase
+public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
 {
     private readonly ApiClient _api = new();
     private SerialClient? _serial;
@@ -78,7 +78,7 @@ public partial class DetailUserControlViewModel : ViewModelBase
 
     public DetailUserControlViewModel()
     {
-        Log.Information("Starting main windows initialization.");
+        Log.Information("Starting main windows initialization");
 
         IsActive = true;
 

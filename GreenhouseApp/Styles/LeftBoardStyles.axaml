@@ -15,5 +15,4 @@
     <Style Selector="Button.BTN:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="#1A4FC3F7"/>
     </Style>
-
 </Styles>

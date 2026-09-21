@@ -1,0 +1,51 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Style Selector="Button.tool-btn">
+        <Setter Property="Background" Value="#16324F"/>
+        <Setter Property="BorderBrush" Value="#2A4A6E"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="#E0F2FE"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    
+    <Style Selector="Button.tool-btn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#2563A8"/>
+        <Setter Property="BorderBrush" Value="#4FC3F7"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style Selector="Button.close-btn">
+        <Setter Property="Background" Value="#2A1820"/>
+        <Setter Property="BorderBrush" Value="#662030"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="#FF8080"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    
+    <Style Selector="Button.close-btn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#A82535"/>
+        <Setter Property="BorderBrush" Value="#FF5252"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style Selector="Button.backdrop-btn">
+        <Setter Property="Background" Value="#E6050C17"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+    </Style>
+    
+    <Style Selector="Button.backdrop-btn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#E6050C17"/>
+    </Style>
+    
+    <Style Selector="Button.backdrop-btn:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="#E6050C17"/>
+    </Style>
+</Styles>

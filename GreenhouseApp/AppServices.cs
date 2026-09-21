@@ -23,7 +23,7 @@ public static class AppServices
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<LeftBoardUserControlViewModel>();
         services.AddSingleton<DetailUserControlViewModel>();
-        services.AddSingleton<GuideAddingGreenhousesAddniUserControlViewModel>();
+        services.AddSingleton<GuideAddingGreenhousesUserControlViewModel>();
         
         services.AddTransient<SettingsDialogWindow>();
         return services;

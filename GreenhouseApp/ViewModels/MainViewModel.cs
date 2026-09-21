@@ -1,41 +1,34 @@
 using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using GreenhouseApp.Messages;
 using GreenhouseApp.Models;
-using GreenhouseApp.Services;
 using GreenhouseApp.ViewModels.Components;
 using GreenhouseApp.ViewModels.Pages;
-using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using SkiaSharp;
 
 namespace GreenhouseApp.ViewModels;
 
-public partial class MainViewModel : ViewModelBase, IRecipient<OpenDetailPageMessage>, IRecipient<OpenGuideAddingGreenhouses>
+public partial class MainViewModel : ViewModelBase, IDisposable, 
+    IRecipient<OpenDetailPageMessage>, 
+    IRecipient<OpenGuideAddingGreenhouses>, 
+    IRecipient<OpenOrCloseViewImageUserControlMessage>
 {
     [ObservableProperty] public partial ViewModelBase? CurrentPage { get; set; }
+    [ObservableProperty] public partial ViewModelBase? TopOverlayContent { get; set; }
 
     private readonly Lazy<DetailUserControlViewModel> _detail;
-    private readonly Lazy<GuideAddingGreenhousesAddniUserControlViewModel> _guideAddingGreenhouses;
-
+    private readonly Lazy<GuideAddingGreenhousesUserControlViewModel> _guideAddingGreenhouses;
+    
     public LeftBoardUserControlViewModel LeftBoardUserControlViewModel { get; }
 
     public MainViewModel()
     {
         var sp = AppServices.Provider;
 
-        _detail = new Lazy<DetailUserControlViewModel>(() => sp.GetRequiredService<DetailUserControlViewModel>());
-        _guideAddingGreenhouses = new Lazy<GuideAddingGreenhousesAddniUserControlViewModel>(() =>
-            sp.GetRequiredService<GuideAddingGreenhousesAddniUserControlViewModel>());
+        _detail = new Lazy<DetailUserControlViewModel>(sp.GetRequiredService<DetailUserControlViewModel>);
+        _guideAddingGreenhouses = new Lazy<GuideAddingGreenhousesUserControlViewModel>(sp.GetRequiredService<GuideAddingGreenhousesUserControlViewModel>);
 
         LeftBoardUserControlViewModel = sp.GetRequiredService<LeftBoardUserControlViewModel>();
 
@@ -61,13 +54,33 @@ public partial class MainViewModel : ViewModelBase, IRecipient<OpenDetailPageMes
         CurrentPage = detailVm;
         WeakReferenceMessenger.Default.Send(new PageChangedMessage(PageType.Detail));
     }
-    
+
+    public void Receive(OpenOrCloseViewImageUserControlMessage message)
+    {
+        if (TopOverlayContent is ViewImageUserControlViewModel old)
+        {
+            TopOverlayContent = null;
+            old.Dispose();
+        }
+
+        if (message.LightboxImage is not null)
+        {
+            TopOverlayContent = new ViewImageUserControlViewModel(
+                message.LightboxImage,
+                message.LightboxTitle ?? "",
+                message.ZoomScale ?? 1.0);
+        }
+    }
+
     public void Dispose()
     {
         IsActive = false;
         
         DisposePage(_detail);
         DisposePage(_guideAddingGreenhouses);
+
+        if (TopOverlayContent is ViewImageUserControlViewModel overlay)
+            overlay.Dispose();
 
         if (LeftBoardUserControlViewModel is IDisposable rightBoardDisposable)
             rightBoardDisposable.Dispose();

@@ -89,13 +89,13 @@ public partial class App : Application
 
     private void SetupGlobalExceptionHandlers()
     {
-        AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
             var ex = args.ExceptionObject as Exception;
             Log.Fatal(ex, "Unhandled AppDomain exception. Terminating={IsTerminating}", args.IsTerminating);
         };
 
-        TaskScheduler.UnobservedTaskException += (sender, args) =>
+        TaskScheduler.UnobservedTaskException += (_, args) =>
         {
             Log.Fatal(args.Exception, "Unobserved task exception");
             args.SetObserved();
@@ -106,6 +106,10 @@ public partial class App : Application
             desktop.Exit += (_, _) =>
             {
                 Log.Information("Application exiting");
+
+                if (desktop.MainWindow?.DataContext is IDisposable viewModel)
+                    viewModel.Dispose();
+
                 Log.CloseAndFlush();
             };
         }
