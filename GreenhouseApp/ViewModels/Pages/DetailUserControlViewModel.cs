@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using GreenhouseApp.Infrastructure;
 using GreenhouseApp.Models;
 using GreenhouseApp.Services;
+using GreenhouseApp.ViewModels.Components;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
@@ -60,6 +61,11 @@ public partial class DetailUserControlViewModel : ViewModelBase
     private readonly ObservableCollection<DateTimePoint> _temperature2Points = [];
     private readonly ObservableCollection<DateTimePoint> _humidity1Points = [];
     private readonly ObservableCollection<DateTimePoint> _humidity2Points = [];
+
+    private readonly ObservableCollection<EventLogItemViewModel> _events = [];
+    public ObservableCollection<EventLogItemViewModel> Events => _events;
+
+    private bool _lastOfflineState;
 
     private readonly ISeries[] _soilSeries;
     private readonly ISeries[] _temperatureSeries;
@@ -238,6 +244,10 @@ public partial class DetailUserControlViewModel : ViewModelBase
         _humidity1Points.Clear();
         _humidity2Points.Clear();
 
+        _lastOfflineState = false;
+        _events.Clear();
+        LogEvent($"Устройство выбрано: {deviceName} ({connectionType})", "#7FB3D5");
+
         ConnectionStatus = "● Подключение...";
         ConnectionColor = "#7FB3D5";
         Status = $"Загрузка {deviceName}...";
@@ -268,7 +278,7 @@ public partial class DetailUserControlViewModel : ViewModelBase
                 ConnectionStatus = "● USB: порт не найден";
                 ConnectionColor = "#FF5252";
                 Status = "Не удалось найти порт ESP32 (проверьте кабель и Serial Monitor)";
-                Log.Warning("USB mode: ESP32 port not found");
+                Log.Debug("USB mode: ESP32 port not found");
                 return;
             }
         }
@@ -291,13 +301,25 @@ public partial class DetailUserControlViewModel : ViewModelBase
             ConnectionStatus = $"● Offline ({latest.AgeSeconds:F0} сек)";
             ConnectionColor = "#FFC107";
             Status = "⚠ Устройство не отвечает — данные устарели";
-            
+
+            if (!_lastOfflineState)
+            {
+                _lastOfflineState = true;
+                LogEvent("⚠ Устройство перестало отвечать", "#FFC107");
+            }
+
             Log.Warning("Device is offline. Age: {AgeSeconds:F1}s. Latest update timestamp: {Timestamp}", 
                 latest.AgeSeconds, 
                 latest.Timestamp);
         }
         else
         {
+            if (_lastOfflineState)
+            {
+                _lastOfflineState = false;
+                LogEvent("✓ Связь с устройством восстановлена", "#4CAF50");
+            }
+
             ConnectionStatus = "● Онлайн";
             ConnectionColor = "#4CAF50";
             Status = (latest.Sensor1Moisture, latest.Sensor2Moisture) switch
@@ -321,6 +343,17 @@ public partial class DetailUserControlViewModel : ViewModelBase
         Light1 = latest.Light1 ?? 0;
         Light2 = latest.Light2 ?? 0;
         LastUpdate = DateTime.Now.ToString("HH:mm:ss");
+
+        // События от ESP32 (что и когда сработало)
+        string[] deviceEvents = _currentConnectionType == "usb"
+            ? _serial?.DrainEvents() ?? []
+            : latest.Events ?? [];
+
+        if (latest.IsFresh && deviceEvents.Length > 0)
+        {
+            foreach (var ev in deviceEvents)
+                LogDeviceEvent(ev);
+        }
 
         if (!IsChartPaused && latest.IsFresh)
         {
@@ -403,7 +436,8 @@ public partial class DetailUserControlViewModel : ViewModelBase
             _serial.SendCommand(action);
         else
             await _api.SendCommandAsync(DeviceId, action);
-        
+
+        LogEvent(CommandLabel(action), "#4FC3F7");
         Log.Information("Device: {DeviceId} Command sent: {Action}", DeviceId, action);
     }
     
@@ -413,6 +447,38 @@ public partial class DetailUserControlViewModel : ViewModelBase
     [RelayCommand] private async Task RoofClose() => await SendCommand("roof_close");
     [RelayCommand] private async Task LightOn() => await SendCommand("light_on");
     [RelayCommand] private async Task LightOff() => await SendCommand("light_off");
+
+    private void LogEvent(string message, string color)
+    {
+        _events.Insert(0, new EventLogItemViewModel(message, color));
+        while (_events.Count > 50) _events.RemoveAt(_events.Count - 1);
+    }
+
+    private static string CommandLabel(string action) => action switch
+    {
+        "pump_on"   => "⏺ Команда: полив ВКЛ",
+        "pump_off"  => "⏹ Команда: полив ВЫКЛ",
+        "roof_open" => "⏺ Команда: крыша ОТКРЫТА",
+        "roof_close"=> "⏹ Команда: крыша ЗАКРЫТА",
+        "light_on"  => "⏺ Команда: свет ВКЛ",
+        "light_off" => "⏹ Команда: свет ВЫКЛ",
+        _           => $"Команда: {action}"
+    };
+
+    private void LogDeviceEvent(string ev)
+    {
+        (string message, string color) = ev switch
+        {
+            "pump_on"    => ("💧 Полив ВКЛ (насос)",    "#4CAF50"),
+            "pump_off"   => ("Полив ВЫКЛ (насос)",      "#4CAF50"),
+            "light_on"   => ("💡 Досветка ВКЛ",         "#FFB74D"),
+            "light_off"  => ("Досветка ВЫКЛ",           "#FFB74D"),
+            "roof_open"  => ("🪟 Крыша ОТКРЫТА",        "#BA68C8"),
+            "roof_close" => ("Крыша ЗАКРЫТА",           "#BA68C8"),
+            _            => ($"Событие: {ev}",          "#7FB3D5")
+        };
+        LogEvent(message, color);
+    }
     
     public void Dispose()
     {

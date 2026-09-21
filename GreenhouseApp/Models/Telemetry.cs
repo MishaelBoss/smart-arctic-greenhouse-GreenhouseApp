@@ -32,6 +32,14 @@ public class Telemetry
     [JsonPropertyName("light1")]         public int? Light1 { get; set; }
     [JsonPropertyName("light2")]         public int? Light2 { get; set; }
 
+    // ==== Состояние исполнительных механизмов ====
+    [JsonPropertyName("pump")]           public bool? Pump  { get; set; }
+    [JsonPropertyName("light")]          public bool? Light { get; set; }
+    [JsonPropertyName("roof")]           public bool? Roof  { get; set; }
+
+    // ==== События от ESP32 (двигатели/реле) ====
+    [JsonPropertyName("ev")]             public string[]? Events { get; set; }
+
     // ==== Служебные ====
     [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 

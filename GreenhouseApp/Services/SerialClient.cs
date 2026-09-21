@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,6 +15,7 @@ public class SerialClient : IDisposable
 {
     private SerialPort? _port;
     private Telemetry? _lastTelemetry;
+    private readonly List<string> _pendingEvents = [];
     private readonly object _lock = new();
     private CancellationTokenSource? _cts;
 
@@ -61,12 +63,24 @@ public class SerialClient : IDisposable
                         var t = JsonSerializer.Deserialize<Telemetry>(line);
                         if (t == null) continue;
                         t.Timestamp = DateTime.UtcNow;
-                        lock (_lock) _lastTelemetry = t;
+                        lock (_lock)
+                        {
+                            if (t.Events is { Length: > 0 })
+                            {
+                                _pendingEvents.AddRange(t.Events);
+                                t.Events = null;
+                            }
+                            _lastTelemetry = t;
+                        }
                     }
                     catch (JsonException)
                     {
                         Log.Debug("Ignored non-JSON or partial serial line: {Line}", line);
                     }
+                }
+                else if (line == "pong")
+                {
+                    EspSerialStatus.MarkActivity();
                 }
             }
             catch (TimeoutException) { /* нормально, ждём дальше */ }
@@ -98,6 +112,20 @@ public class SerialClient : IDisposable
             _lastTelemetry.AgeSeconds = (DateTime.UtcNow - _lastTelemetry.Timestamp).TotalSeconds;
 
             return _lastTelemetry;
+        }
+    }
+
+    /// <summary>
+    /// Возвращает накопленные события от ESP32 и очищает очередь.
+    /// </summary>
+    public string[] DrainEvents()
+    {
+        lock (_lock)
+        {
+            if (_pendingEvents.Count == 0) return [];
+            var result = _pendingEvents.ToArray();
+            _pendingEvents.Clear();
+            return result;
         }
     }
 
@@ -190,7 +218,7 @@ public class SerialClient : IDisposable
 
                 port.Open();
                 Log.Debug("Port {Port} opened, waiting for ESP32 to be ready...", portName);
-                Thread.Sleep(2000); 
+                Thread.Sleep(300); 
                 port.DiscardInBuffer();
 
                 var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
@@ -232,7 +260,7 @@ public class SerialClient : IDisposable
             }
             catch (UnauthorizedAccessException)
             {
-                Log.Warning("Port {Port} is busy (Arduino Serial Monitor открыт?)", portName);
+                Log.Debug("Port {Port} is busy (возможно, открыт этим же приложением)", portName);
             }
             catch (Exception ex)
             {
