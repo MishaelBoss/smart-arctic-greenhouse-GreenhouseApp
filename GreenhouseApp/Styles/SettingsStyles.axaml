@@ -3,113 +3,113 @@
     
     <Style Selector="TextBox.Search">
         <Setter Property="CornerRadius" Value="6"/>
-        <Setter Property="Background" Value="#1F2023"/>
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="PlaceholderForeground" Value="#80FFFFFF"/>
+        <Setter Property="Background" Value="#102840"/>
+        <Setter Property="BorderBrush" Value="#2A4A6E"/>
+        <Setter Property="Foreground" Value="#E0F2FE"/>
+        <Setter Property="PlaceholderForeground" Value="#5B7F99"/>
     </Style>
     
     <Style Selector="TextBox.Search:pointerover /template/ Border#PART_BorderElement">
-        <Setter Property="Background" Value="#1F2023"/>
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
+        <Setter Property="Background" Value="#132A47"/>
+        <Setter Property="BorderBrush" Value="#3A5C86"/>
     </Style>
 
     <Style Selector="TextBox.Search:focus /template/ Border#PART_BorderElement">
-        <Setter Property="Background" Value="#1F2023"/>
-        <Setter Property="BorderBrush" Value="#8D8D9A"/>
-        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Background" Value="#102840"/>
+        <Setter Property="BorderBrush" Value="#4FC3F7"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
     </Style>
     
     <Style Selector="Button.Ok">
-        <Setter Property="Background" Value="#1F2023"/>
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
+        <Setter Property="Background" Value="#2563A8"/>
+        <Setter Property="BorderBrush" Value="#2563A8"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="CornerRadius" Value="6"/>
     </Style>
         
     <Style Selector="Button.Ok:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="#1F2023"/>
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
+        <Setter Property="Background" Value="#2E74C0"/>
+        <Setter Property="BorderBrush" Value="#2E74C0"/>
         <Setter Property="Foreground" Value="White"/>
     </Style>
 
     <Style Selector="Button.Ok:pressed /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="#1F2023" />
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
+        <Setter Property="Background" Value="#1E5B8A"/>
+        <Setter Property="BorderBrush" Value="#1E5B8A"/>
         <Setter Property="Foreground" Value="White"/>
     </Style>
     
     <Style Selector="Button.Cancel">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
+        <Setter Property="BorderBrush" Value="#2A4A6E"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Foreground" Value="#9E9EB0"/>
+        <Setter Property="Foreground" Value="#8FA8BF"/>
         <Setter Property="CornerRadius" Value="6"/>
     </Style>
     
     <Style Selector="Button.Cancel:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
-        <Setter Property="Foreground" Value="#9E9EB0"/>
+        <Setter Property="Background" Value="#16324F"/>
+        <Setter Property="BorderBrush" Value="#3A5C86"/>
+        <Setter Property="Foreground" Value="#E0F2FE"/>
     </Style>
     
     <Style Selector="Button.Cancel:pressed /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
-        <Setter Property="Foreground" Value="#9E9EB0"/>
+        <Setter Property="Background" Value="#0F2540"/>
+        <Setter Property="BorderBrush" Value="#2A4A6E"/>
+        <Setter Property="Foreground" Value="#E0F2FE"/>
     </Style>
     
     <Style Selector="Button.Apply">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
+        <Setter Property="BorderBrush" Value="#2A4A6E"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Foreground" Value="#9E9EB0"/>
+        <Setter Property="Foreground" Value="#8FA8BF"/>
         <Setter Property="CornerRadius" Value="6"/>
     </Style>
     
     <Style Selector="Button.Apply:disabled /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="#1F2023"/>
+        <Setter Property="BorderBrush" Value="#1A2B44"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Foreground" Value="#4D4D52"/>
+        <Setter Property="Foreground" Value="#3D5A74"/>
         <Setter Property="CornerRadius" Value="6"/>
     </Style>
     
     <Style Selector="Button.Apply:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
-        <Setter Property="Foreground" Value="#9E9EB0"/>
+        <Setter Property="Background" Value="#16324F"/>
+        <Setter Property="BorderBrush" Value="#3A5C86"/>
+        <Setter Property="Foreground" Value="#E0F2FE"/>
     </Style>
     
     <Style Selector="Button.Apply:pressed /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
-        <Setter Property="Foreground" Value="#9E9EB0"/>
+        <Setter Property="Background" Value="#0F2540"/>
+        <Setter Property="BorderBrush" Value="#2A4A6E"/>
+        <Setter Property="Foreground" Value="#E0F2FE"/>
     </Style>
     
     <!--->Test<!-->
     
     <Style Selector="Button.Btn1">
-        <Setter Property="Background" Value="#1F2023"/>
-        <Setter Property="BorderBrush" Value="#3D3D42"/>
+        <Setter Property="Background" Value="#16324F"/>
+        <Setter Property="BorderBrush" Value="#2A4A6E"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="#E0F2FE"/>
         <Setter Property="CornerRadius" Value="6"/>
     </Style>
         
     <Style Selector="Button.Btn1:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="#2D2D30"/>
-        <Setter Property="BorderBrush" Value="#4D4D52"/>
+        <Setter Property="Background" Value="#1E4670"/>
+        <Setter Property="BorderBrush" Value="#3A5C86"/>
         <Setter Property="Foreground" Value="White"/>
     </Style>
     
     <Style Selector="TextBox.TB1">
-        <Setter Property="PlaceholderForeground" Value="#80FFFFFF"/>
-        <Setter Property="Background" Value="#3A3A3A"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="PlaceholderForeground" Value="#5B7F99"/>
+        <Setter Property="Background" Value="#16324F"/>
+        <Setter Property="Foreground" Value="#E0F2FE"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="#444"/>
+        <Setter Property="BorderBrush" Value="#2A4A6E"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="14,9"/>
         <Setter Property="MinHeight" Value="40"/>
@@ -119,18 +119,18 @@
     </Style>
     
     <Style Selector="TextBox.TB1:pointerover /template/ Border#PART_BorderElement">
-        <Setter Property="BorderBrush" Value="#555"/>
-        <Setter Property="Background" Value="#404040"/>
+        <Setter Property="BorderBrush" Value="#3A5C86"/>
+        <Setter Property="Background" Value="#1B3A5C"/>
     </Style>
     
     <Style Selector="TextBox.TB1:focus /template/ Border#PART_BorderElement">
-        <Setter Property="BorderBrush" Value="#28A745"/>
-        <Setter Property="Background" Value="#3A3A3A"/>
-        <Setter Property="BoxShadow" Value="0 0 0 3 #3028A745"/>
+        <Setter Property="BorderBrush" Value="#4FC3F7"/>
+        <Setter Property="Background" Value="#16324F"/>
+        <Setter Property="BoxShadow" Value="0 0 0 3 #304FC3F7"/>
     </Style>
 
     <Style Selector="TextBlock.FieldLabel">
-        <Setter Property="Foreground" Value="#9E9EB0"/>
+        <Setter Property="Foreground" Value="#7FB3D5"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="FontWeight" Value="Medium"/>
         <Setter Property="Margin" Value="2,0,0,0"/>

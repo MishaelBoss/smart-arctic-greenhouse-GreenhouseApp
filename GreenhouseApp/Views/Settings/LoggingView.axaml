@@ -12,15 +12,15 @@
     
     <StackPanel Spacing="20">
         <TextBlock Text="Управление системными журналами и аутентификацией. Вы можете настроить уровень детализации или просмотреть файлы логов напрямую." 
-                   Foreground="#9E9EB0" 
+                   Foreground="#8FA8BF" 
                    FontSize="13" 
                    TextWrapping="Wrap"/>
         
-        <Border BorderBrush="#2D2D30" BorderThickness="1" CornerRadius="8" Padding="16" Background="#151517">
+        <Border BorderBrush="#1A3A5C" BorderThickness="1" CornerRadius="8" Padding="16" Background="#102840">
             <Grid ColumnDefinitions="*, Auto" VerticalAlignment="Center">
                 <StackPanel Grid.Column="0" Spacing="4">
                     <TextBlock Text="Журналы работы приложения" FontSize="14" FontWeight="Medium" Foreground="White"/>
-                    <TextBlock Text="Открыть папку со всеми текстовыми файлами логов (.text)" Foreground="#777778" FontSize="12"/>
+                    <TextBlock Text="Открыть папку со всеми текстовыми файлами логов (.text)" Foreground="#5B7F99" FontSize="12"/>
                 </StackPanel>
                 
                 <Button Grid.Column="1"

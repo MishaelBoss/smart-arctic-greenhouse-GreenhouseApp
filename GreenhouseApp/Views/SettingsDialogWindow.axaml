@@ -32,7 +32,7 @@
                 Height="38" 
                 Background="#0A1929" 
                 Padding="16,0,24,0"
-                BorderBrush="#26262B" 
+                BorderBrush="#1A3A5C" 
                 BorderThickness="0,0,0,1"
                 WindowDecorationProperties.ElementRole="TitleBar">
             <Grid ColumnDefinitions="Auto, *">
@@ -44,7 +44,7 @@
                            Margin="5,0,0,0"
                            Text="settings"
                            FontWeight="SemiBold"
-                           Foreground="#CED0D6"
+                           Foreground="#E0F2FE"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            IsHitTestVisible="False"/>
@@ -69,18 +69,18 @@
                         <Style Selector="ListBoxItem">
                             <Setter Property="Padding" Value="16,10"/>
                             <Setter Property="FontSize" Value="13"/>
-                            <Setter Property="Foreground" Value="#9E9EB0"/>
+                            <Setter Property="Foreground" Value="#8FA8BF"/>
                             <Setter Property="Background" Value="Transparent"/>
                             <Setter Property="CornerRadius" Value="6"/>
                             <Setter Property="Margin" Value="8,2"/>
                         </Style>
                         <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
-                            <Setter Property="Background" Value="#1A1A1C"/>
-                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="#16324F"/>
+                            <Setter Property="Foreground" Value="#E0F2FE"/>
                         </Style>
                         <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
-                            <Setter Property="Background" Value="#1F2023"/>
-                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="#1E4670"/>
+                            <Setter Property="Foreground" Value="#4FC3F7"/>
                         </Style>
                     </ListBox.Styles>
                     
@@ -112,11 +112,11 @@
         </Grid>
 
         <Border Grid.Row="2" Background="#0A1929" Padding="16,12,24,16"
-                BorderBrush="#26262B" BorderThickness="0,1,0,0">
+                BorderBrush="#1A3A5C" BorderThickness="0,1,0,0">
             <Grid ColumnDefinitions="Auto, *">
                 <TextBlock Grid.Column="0"
                            Text="Изменения сохраняются после нажатия «Применить»"
-                           Foreground="#777778" FontSize="12" VerticalAlignment="Center"/>
+                           Foreground="#5B7F99" FontSize="12" VerticalAlignment="Center"/>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
                     <Button Content="ОК"
