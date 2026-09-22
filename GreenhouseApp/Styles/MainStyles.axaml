@@ -28,7 +28,28 @@
                 <Setter Property="FontWeight" Value="SemiBold"/>
                 <Setter Property="FontSize" Value="14"/>
         </Style>
-        
+
+        <Style Selector="Button.cmd:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="#2563A8"/>
+                <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="Button.BTN">
+                <Setter Property="Background" Value="#16324F"/>
+                <Setter Property="BorderBrush" Value="#2A4A6E"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Foreground" Value="#E0F2FE"/>
+                <Setter Property="Padding" Value="10,5"/>
+                <Setter Property="CornerRadius" Value="6"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.BTN:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="#2563A8"/>
+                <Setter Property="BorderBrush" Value="#4FC3F7"/>
+                <Setter Property="Foreground" Value="White"/>
+        </Style>
+
         <Style Selector="Button.tab">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="Foreground" Value="White"/>
