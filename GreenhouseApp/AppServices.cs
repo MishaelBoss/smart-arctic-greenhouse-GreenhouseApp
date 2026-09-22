@@ -24,6 +24,7 @@ public static class AppServices
         services.AddSingleton<LeftBoardUserControlViewModel>();
         services.AddSingleton<DetailUserControlViewModel>();
         services.AddSingleton<GuideAddingGreenhousesUserControlViewModel>();
+        services.AddSingleton<ListDeviceUserControlViewModel>();
         
         services.AddTransient<SettingsDialogWindow>();
         return services;

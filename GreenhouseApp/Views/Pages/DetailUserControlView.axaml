@@ -260,8 +260,12 @@
     <!-- FOOTER -->
     <Border Grid.Row="4" Background="#102840" CornerRadius="12" Padding="16">
       <Grid ColumnDefinitions="*,Auto,Auto">
-        <TextBlock Grid.Column="0" Text="{Binding Status}"
-                   Foreground="#FFC107" FontSize="14" FontWeight="SemiBold"/>
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+          <Svg Path="{Binding StatusIcon}" Width="17" Height="17"
+               VerticalAlignment="Center" Css="* { stroke: #FFC107 }"/>
+          <TextBlock Text="{Binding Status}"
+                     Foreground="#FFC107" FontSize="14" FontWeight="SemiBold"/>
+        </StackPanel>
         <TextBlock Grid.Column="1" Text="{Binding ConnectionStatus}"
                    Foreground="{Binding ConnectionColor}"
                    FontSize="13" Margin="0,0,16,0"/>

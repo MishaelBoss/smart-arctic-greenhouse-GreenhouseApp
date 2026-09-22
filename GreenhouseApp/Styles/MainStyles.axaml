@@ -40,4 +40,21 @@
         <Style Selector="Button.tab:pointerover /template/ ContentPresenter">
                 <Setter Property="Background" Value="#1A4FC3F7"/>
         </Style>
+
+        <Style Selector="Button.key-btn">
+                <Setter Property="Background" Value="#0F2540"/>
+                <Setter Property="BorderBrush" Value="#2A4A6E"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Foreground" Value="#B8CEE0"/>
+                <Setter Property="Padding" Value="8,3"/>
+                <Setter Property="CornerRadius" Value="5"/>
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="FontFamily" Value="Consolas"/>
+                <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.key-btn:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="#16324F"/>
+                <Setter Property="BorderBrush" Value="#4FC3F7"/>
+                <Setter Property="Foreground" Value="#E0F2FE"/>
+        </Style>
 </Styles>

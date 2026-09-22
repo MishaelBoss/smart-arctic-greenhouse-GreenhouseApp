@@ -10,16 +10,20 @@ using Serilog;
 
 namespace GreenhouseApp.ViewModels;
 
-public partial class MainViewModel : ViewModelBase, IDisposable, 
-    IRecipient<OpenDetailPageMessage>, 
-    IRecipient<OpenGuideAddingGreenhouses>, 
-    IRecipient<OpenOrCloseViewImageUserControlMessage>
+public partial class MainViewModel : ViewModelBase, IDisposable,
+    IRecipient<OpenDetailPageMessage>,
+    IRecipient<OpenGuideAddingGreenhouses>,
+    IRecipient<OpenOrCloseViewImageUserControlMessage>,
+    IRecipient<OpenListDevicesMessage>,
+    IRecipient<OpenAddOrEditDeviceMessage>,
+    IRecipient<CloseAddOrEditDeviceMessage>
 {
     [ObservableProperty] public partial ViewModelBase? CurrentPage { get; set; }
     [ObservableProperty] public partial ViewModelBase? TopOverlayContent { get; set; }
 
     private readonly Lazy<DetailUserControlViewModel> _detail;
     private readonly Lazy<GuideAddingGreenhousesUserControlViewModel> _guideAddingGreenhouses;
+    private readonly Lazy<ListDeviceUserControlViewModel>  _listDevice;
     
     public LeftBoardUserControlViewModel LeftBoardUserControlViewModel { get; }
 
@@ -29,6 +33,7 @@ public partial class MainViewModel : ViewModelBase, IDisposable,
 
         _detail = new Lazy<DetailUserControlViewModel>(sp.GetRequiredService<DetailUserControlViewModel>);
         _guideAddingGreenhouses = new Lazy<GuideAddingGreenhousesUserControlViewModel>(sp.GetRequiredService<GuideAddingGreenhousesUserControlViewModel>);
+        _listDevice = new Lazy<ListDeviceUserControlViewModel>(sp.GetRequiredService<ListDeviceUserControlViewModel>);
 
         LeftBoardUserControlViewModel = sp.GetRequiredService<LeftBoardUserControlViewModel>();
 
@@ -55,12 +60,18 @@ public partial class MainViewModel : ViewModelBase, IDisposable,
         WeakReferenceMessenger.Default.Send(new PageChangedMessage(PageType.Detail));
     }
 
+    public void Receive(OpenListDevicesMessage message)
+    {
+        CurrentPage = _listDevice.Value;
+        WeakReferenceMessenger.Default.Send(new PageChangedMessage(PageType.ListDevice));
+    }
+
     public void Receive(OpenOrCloseViewImageUserControlMessage message)
     {
-        if (TopOverlayContent is ViewImageUserControlViewModel old)
+        if (TopOverlayContent is IDisposable oldDisposable)
         {
             TopOverlayContent = null;
-            old.Dispose();
+            oldDisposable.Dispose();
         }
 
         if (message.LightboxImage is not null)
@@ -72,15 +83,36 @@ public partial class MainViewModel : ViewModelBase, IDisposable,
         }
     }
 
+    public void Receive(OpenAddOrEditDeviceMessage message)
+    {
+        if (TopOverlayContent is IDisposable oldDisposable)
+        {
+            TopOverlayContent = null;
+            oldDisposable.Dispose();
+        }
+
+        TopOverlayContent = new AddOrEditDeviceUserControlViewModel(message.Device);
+    }
+
+    public void Receive(CloseAddOrEditDeviceMessage message)
+    {
+        if (TopOverlayContent is IDisposable oldDisposable)
+        {
+            TopOverlayContent = null;
+            oldDisposable.Dispose();
+        }
+    }
+
     public void Dispose()
     {
         IsActive = false;
         
         DisposePage(_detail);
         DisposePage(_guideAddingGreenhouses);
+        DisposePage(_listDevice);
 
-        if (TopOverlayContent is ViewImageUserControlViewModel overlay)
-            overlay.Dispose();
+        if (TopOverlayContent is IDisposable overlayDisposable)
+            overlayDisposable.Dispose();
 
         if (LeftBoardUserControlViewModel is IDisposable rightBoardDisposable)
             rightBoardDisposable.Dispose();

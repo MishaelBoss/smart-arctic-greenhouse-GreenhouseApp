@@ -15,7 +15,7 @@ using Serilog;
 
 namespace GreenhouseApp.ViewModels.Components;
 
-public partial class LeftBoardUserControlViewModel : ViewModelBase, IDisposable
+public partial class LeftBoardUserControlViewModel : ViewModelBase, IDisposable, IRecipient<DevicesChangedMessage>
 {
     private readonly ApiClient _api = new();
     private CancellationTokenSource? _cts;
@@ -141,6 +141,22 @@ public partial class LeftBoardUserControlViewModel : ViewModelBase, IDisposable
     public void RefreshDevices()
     {
         _lastUsbProbeUtc = DateTime.MinValue;
+        _ = LoadDevicesAsync();
+    }
+
+    [RelayCommand]
+    public void OpenListDevices()
+    {
+        SelectedDeviceId = -1;
+        foreach (var btn in Buttons)
+        {
+            btn.IsSelected = false;
+        }
+        WeakReferenceMessenger.Default.Send(new OpenListDevicesMessage());
+    }
+
+    public void Receive(DevicesChangedMessage message)
+    {
         _ = LoadDevicesAsync();
     }
 

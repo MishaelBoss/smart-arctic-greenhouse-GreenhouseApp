@@ -72,4 +72,49 @@ public class ApiClient(string baseUrl = "http://localhost:8000")
             return false;
         }
     }
+
+    public async Task<Device?> CreateDeviceAsync(string name, string connectionType)
+    {
+        try
+        {
+            var response = await _http.PostAsJsonAsync("/api/devices",
+                new { name, connection_type = connectionType });
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<Device>()
+                : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<Device?> UpdateDeviceAsync(int deviceId, string name, string connectionType)
+    {
+        try
+        {
+            var response = await _http.PatchAsJsonAsync($"/api/devices/{deviceId}",
+                new { name, connection_type = connectionType });
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<Device>()
+                : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<bool> DeleteDeviceAsync(int deviceId)
+    {
+        try
+        {
+            var response = await _http.DeleteAsync($"/api/devices/{deviceId}");
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

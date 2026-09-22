@@ -51,10 +51,16 @@
                             <TextBlock Text="Обновить список" VerticalAlignment="Center" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button>
+                    <Button Command="{Binding OpenListDevicesCommand}" Width="185" Height="40" Classes="BTN">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{SvgImage /Assets/circle-plus.svg}" Width="20" Height="20"/>
+                            <TextBlock Text="Устройства" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Button>
                     <Button Command="{Binding OpenGuideAddingGreenhousesCommand}" Width="185" Height="40" Classes="BTN">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="{SvgImage /Assets/house.svg}" Width="20" Height="20"/>
-                            <TextBlock Text="Главаная" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                            <TextBlock Text="Главная" VerticalAlignment="Center" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button>
                     <Button Command="{Binding OpenSettingsCommand}" Width="185" Height="40" Classes="BTN">

@@ -40,6 +40,7 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private int _light1;
     [ObservableProperty] private int _light2;
     [ObservableProperty] private string _status = "Ожидание данных...";
+    [ObservableProperty] private string? _statusIcon;
     [ObservableProperty] private string _connectionStatus = "● Подключение...";
     [ObservableProperty] private string _lastUpdate = "--:--:--";
     [ObservableProperty] private string _connectionColor = "#4CAF50";
@@ -300,7 +301,8 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
         {
             ConnectionStatus = $"● Offline ({latest.AgeSeconds:F0} сек)";
             ConnectionColor = "#FFC107";
-            Status = "⚠ Устройство не отвечает — данные устарели";
+            Status = "Устройство не отвечает — данные устарели";
+            StatusIcon = "/Assets/triangle-alert.svg";
 
             if (!_lastOfflineState)
             {
@@ -322,13 +324,17 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
 
             ConnectionStatus = "● Онлайн";
             ConnectionColor = "#4CAF50";
-            Status = (latest.Sensor1Moisture, latest.Sensor2Moisture) switch
+
+            var (statusText, statusIcon) = (latest.Sensor1Moisture, latest.Sensor2Moisture) switch
             {
-                ( < 30, < 70) => "⚠ Верхний сухой — полив включён",
-                ( < 30, >= 70) => "💧 Вода дошла до корней",
-                ( >= 60, _) => "✓ Влажность в норме",
-                _ => "⏳ Ожидание"
+                ( < 30, < 70) => ("Верхний сухой — полив включён", "/Assets/triangle-alert.svg"),
+                ( < 30, >= 70) => ("Вода дошла до корней", "/Assets/droplet.svg"),
+                ( >= 60, _) => ("Влажность в норме", "/Assets/check.svg"),
+                _ => ("Ожидание", "/Assets/hourglass.svg")
             };
+
+            Status = statusText;
+            StatusIcon = statusIcon;
         }
         
         Sensor1Moisture = latest.Sensor1Moisture;
@@ -344,8 +350,7 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
         Light2 = latest.Light2 ?? 0;
         LastUpdate = DateTime.Now.ToString("HH:mm:ss");
 
-        // События от ESP32 (что и когда сработало)
-        string[] deviceEvents = _currentConnectionType == "usb"
+        var deviceEvents = _currentConnectionType == "usb"
             ? _serial?.DrainEvents() ?? []
             : latest.Events ?? [];
 
