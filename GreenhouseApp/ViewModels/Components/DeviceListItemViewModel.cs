@@ -34,7 +34,7 @@ public partial class DeviceListItemViewModel : ViewModelBase
     [RelayCommand]
     private async Task CopyKey()
     {
-        ClipboardService.SetText(ApiKey);
+        await ClipboardService.SetTextAsync(ApiKey);
         IsKeyCopied = true;
         await Task.Delay(2000);
         IsKeyCopied = false;

@@ -68,14 +68,14 @@ public partial class ListDeviceUserControlViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    public void EditDevice(DeviceListItemViewModel item)
+    public void EditDevice(DeviceListItemViewModel? item)
     {
         if (item is null) return;
         WeakReferenceMessenger.Default.Send(new OpenAddOrEditDeviceMessage(item.Device));
     }
 
     [RelayCommand]
-    public async Task DeleteDevice(DeviceListItemViewModel item)
+    public async Task DeleteDevice(DeviceListItemViewModel? item)
     {
         if (item is null) return;
 

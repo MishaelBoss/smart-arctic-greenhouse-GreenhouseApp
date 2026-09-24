@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using GreenhouseApp.ViewModels;
 
 namespace GreenhouseApp.Views;
 

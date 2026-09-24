@@ -21,7 +21,8 @@ public partial class SettingsDialogWindowViewModel : ViewModelBase
     {
         Pages =
         [
-            new SettingsPageItem("Логирование", new LoggingViewModel())
+            new SettingsPageItem("Логирование", new LoggingViewModel()),
+            new SettingsPageItem("Сервер", new ServerViewModel())
         ];
 
         SelectedPage = Pages[0];

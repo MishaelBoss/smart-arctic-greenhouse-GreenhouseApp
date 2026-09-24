@@ -26,7 +26,6 @@ public partial class AddOrEditDeviceUserControlViewModel : ViewModelBase, IDispo
     [ObservableProperty] private string _createdApiKey = "";
     [ObservableProperty] private bool _isKeyCopied;
 
-    public bool IsEditMode => _deviceId is not null;
     public string ConnectionType => IsUsb ? "usb" : "wifi";
 
     public AddOrEditDeviceUserControlViewModel(Device? device)
@@ -117,7 +116,7 @@ public partial class AddOrEditDeviceUserControlViewModel : ViewModelBase, IDispo
     [RelayCommand]
     private async Task CopyCreatedKey()
     {
-        ClipboardService.SetText(CreatedApiKey);
+        await ClipboardService.SetTextAsync(CreatedApiKey);
         IsKeyCopied = true;
         await Task.Delay(2000);
         IsKeyCopied = false;

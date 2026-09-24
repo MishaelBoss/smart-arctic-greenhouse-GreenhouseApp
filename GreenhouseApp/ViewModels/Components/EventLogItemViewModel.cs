@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace GreenhouseApp.ViewModels.Components;
 
-public partial class EventLogItemViewModel : ObservableObject
+public class EventLogItemViewModel : ObservableObject
 {
     public string Timestamp { get; }
     public string Message { get; }
