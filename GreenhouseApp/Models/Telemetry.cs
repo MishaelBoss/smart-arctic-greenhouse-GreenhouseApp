@@ -43,6 +43,6 @@ public class Telemetry
     // ==== Служебные ====
     [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 
-    [JsonIgnore] public bool   IsFresh    { get; set; } = true;
-    [JsonIgnore] public double AgeSeconds { get; set; }
+    [JsonPropertyName("is_fresh")]    public bool   IsFresh    { get; set; } = true;
+    [JsonPropertyName("age_seconds")] public double AgeSeconds { get; set; }
 }
