@@ -89,18 +89,26 @@
           </StackPanel>
 
           <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,12,0,0">
-            <TextBlock Text="ДАТЧИК 1 · СВЕТ" Classes="label"/>
+            <TextBlock Text="СВЕТ · ВНУТРИ" Classes="label"/>
             <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
               <Run Text="{Binding Light1, StringFormat={}{0:F0}}"/>
               <Run Text=" lux"/>
             </TextBlock>
           </StackPanel>
           <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,12,0,0">
-            <TextBlock Text="ДАТЧИК 2 · СВЕТ" Classes="label"/>
-            <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
-              <Run Text="{Binding Light2, StringFormat={}{0:F0}}"/>
-              <Run Text=" lux"/>
-            </TextBlock>
+            <TextBlock Text="СВЕТ · СНАРУЖИ" Classes="label"/>
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
+              <Svg Path="/Assets/sun.svg" Width="24" Height="24" VerticalAlignment="Center"
+                   IsVisible="{Binding !IsOutsideDark}" Css="* { stroke: #FFB74D }"/>
+              <Svg Path="/Assets/moon.svg" Width="24" Height="24" VerticalAlignment="Center"
+                   IsVisible="{Binding IsOutsideDark}" Css="* { stroke: #81D4FA }"/>
+              <TextBlock FontSize="26" FontWeight="Bold" Foreground="White">
+                <Run Text="{Binding Light2, StringFormat={}{0:F0}}"/>
+                <Run Text=" lux"/>
+              </TextBlock>
+            </StackPanel>
+            <TextBlock Text="{Binding LightRelayText}" Foreground="{Binding LightRelayColor}"
+                       FontSize="11" Margin="0,4,0,0"/>
           </StackPanel>
         </Grid>
       </Border>

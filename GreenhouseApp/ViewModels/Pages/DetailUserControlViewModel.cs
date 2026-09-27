@@ -37,8 +37,10 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private double _humidity1;
     [ObservableProperty] private double _temperature2;
     [ObservableProperty] private double _humidity2;
-    [ObservableProperty] private int _light1;
-    [ObservableProperty] private int _light2;
+[ObservableProperty] private int _light1;
+ [ObservableProperty] private int _light2;
+ [ObservableProperty] private bool _isOutsideDark;
+ [ObservableProperty] private bool _lightRelayOn;
     [ObservableProperty] private string _status = "Ожидание данных...";
     [ObservableProperty] private string? _statusIcon;
     [ObservableProperty] private string _connectionStatus = "● Подключение...";
@@ -348,6 +350,8 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
         Humidity2 = latest.Humidity2 ?? 0;
         Light1 = latest.Light1 ?? 0;
         Light2 = latest.Light2 ?? 0;
+        IsOutsideDark = Light2 <= 1500;
+        LightRelayOn = latest.Light ?? false;
         LastUpdate = DateTime.Now.ToString("HH:mm:ss");
 
         var deviceEvents = _currentConnectionType == "usb"
@@ -470,20 +474,29 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
         _           => $"Команда: {action}"
     };
 
-    private void LogDeviceEvent(string ev)
-    {
-        (string message, string color) = ev switch
-        {
-            "pump_on"    => ("💧 Полив ВКЛ (насос)",    "#4CAF50"),
-            "pump_off"   => ("Полив ВЫКЛ (насос)",      "#4CAF50"),
-            "light_on"   => ("💡 Досветка ВКЛ",         "#FFB74D"),
-            "light_off"  => ("Досветка ВЫКЛ",           "#FFB74D"),
-            "roof_open"  => ("🪟 Крыша ОТКРЫТА",        "#BA68C8"),
-            "roof_close" => ("Крыша ЗАКРЫТА",           "#BA68C8"),
-            _            => ($"Событие: {ev}",          "#7FB3D5")
-        };
-        LogEvent(message, color);
-    }
+ private void LogDeviceEvent(string ev)
+ {
+ (string message, string color) = ev switch
+ {
+ "pump_on" => ("💧 Полив ВКЛ (насос)", "#4CAF50"),
+ "pump_off" => ("Полив ВЫКЛ (насос)", "#4CAF50"),
+ "light_on" => ("💡 Досветка ВКЛ", "#FFB74D"),
+ "light_off" => ("Досветка ВЫКЛ", "#FFB74D"),
+ "roof_open" => ("🪟 Крыша ОТКРЫТА", "#BA68C8"),
+ "roof_close" => ("Крыша ЗАКРЫТА", "#BA68C8"),
+ _ => ($"Событие: {ev}", "#7FB3D5")
+ };
+ LogEvent(message, color);
+ }
+
+ public string LightRelayText => LightRelayOn ? "Реле света: ВКЛ" : "Реле света: ВЫКЛ";
+ public string LightRelayColor => LightRelayOn ? "#4CAF50" : "#8FA8BF";
+
+ partial void OnLightRelayOnChanged(bool value)
+ {
+ OnPropertyChanged(nameof(LightRelayText));
+ OnPropertyChanged(nameof(LightRelayColor));
+ }
     
     public void Dispose()
     {
