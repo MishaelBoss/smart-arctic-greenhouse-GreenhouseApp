@@ -37,6 +37,8 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private double _humidity1;
     [ObservableProperty] private double _temperature2;
     [ObservableProperty] private double _humidity2;
+    [ObservableProperty] private double _temperatureAvg;
+    [ObservableProperty] private double _humidityAvg;
 [ObservableProperty] private int _light1;
  [ObservableProperty] private int _light2;
  [ObservableProperty] private bool _isOutsideDark;
@@ -62,8 +64,10 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
     private readonly ObservableCollection<DateTimePoint> _soil2Points = [];
     private readonly ObservableCollection<DateTimePoint> _temperature1Points = [];
     private readonly ObservableCollection<DateTimePoint> _temperature2Points = [];
+    private readonly ObservableCollection<DateTimePoint> _temperatureAvgPoints = [];
     private readonly ObservableCollection<DateTimePoint> _humidity1Points = [];
     private readonly ObservableCollection<DateTimePoint> _humidity2Points = [];
+    private readonly ObservableCollection<DateTimePoint> _humidityAvgPoints = [];
 
     private readonly ObservableCollection<EventLogItemViewModel> _events = [];
     public ObservableCollection<EventLogItemViewModel> Events => _events;
@@ -111,11 +115,20 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
         [
             new LineSeries<DateTimePoint>
             {
+                Name = "Среднее · Температура",
+                Values = _temperatureAvgPoints,
+                Fill = null,
+                Stroke = new SolidColorPaint(SKColor.Parse("#FFB74D"), 4),
+                GeometrySize = 0,
+                LineSmoothness = 0.5
+            },
+            new LineSeries<DateTimePoint>
+            {
                 Name = "Датчик 1 · Температура",
                 Values = _temperature1Points,
                 Fill = null,
-                Stroke = new SolidColorPaint(SKColor.Parse("#FFB74D"), 3),
-                GeometrySize = 8,
+                Stroke = new SolidColorPaint(SKColor.Parse("#FFF3E0"), 1.5f),
+                GeometrySize = 4,
                 LineSmoothness = 0.5
             },
             new LineSeries<DateTimePoint>
@@ -123,8 +136,8 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
                 Name = "Датчик 2 · Температура",
                 Values = _temperature2Points,
                 Fill = null,
-                Stroke = new SolidColorPaint(SKColor.Parse("#F06292"), 3),
-                GeometrySize = 8,
+                Stroke = new SolidColorPaint(SKColor.Parse("#F06292"), 1.5f),
+                GeometrySize = 4,
                 LineSmoothness = 0.5
             }
         ];
@@ -133,11 +146,20 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
         [
             new LineSeries<DateTimePoint>
             {
+                Name = "Среднее · Влажность",
+                Values = _humidityAvgPoints,
+                Fill = null,
+                Stroke = new SolidColorPaint(SKColor.Parse("#4FC3F7"), 4),
+                GeometrySize = 0,
+                LineSmoothness = 0.5
+            },
+            new LineSeries<DateTimePoint>
+            {
                 Name = "Датчик 1 · Влажность",
                 Values = _humidity1Points,
                 Fill = null,
-                Stroke = new SolidColorPaint(SKColor.Parse("#81D4FA"), 3),
-                GeometrySize = 8,
+                Stroke = new SolidColorPaint(SKColor.Parse("#E1F5FE"), 1.5f),
+                GeometrySize = 4,
                 LineSmoothness = 0.5
             },
             new LineSeries<DateTimePoint>
@@ -145,8 +167,8 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
                 Name = "Датчик 2 · Влажность",
                 Values = _humidity2Points,
                 Fill = null,
-                Stroke = new SolidColorPaint(SKColor.Parse("#AED581"), 3),
-                GeometrySize = 8,
+                Stroke = new SolidColorPaint(SKColor.Parse("#AED581"), 1.5f),
+                GeometrySize = 4,
                 LineSmoothness = 0.5
             }
         ];
@@ -236,6 +258,8 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
         Humidity1 = 0;
         Temperature2 = 0;
         Humidity2 = 0;
+        TemperatureAvg = 0;
+        HumidityAvg = 0;
         Light1 = 0;
         Light2 = 0;
         LastUpdate = "--:--:--";
@@ -244,8 +268,10 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
         _soil2Points.Clear();
         _temperature1Points.Clear();
         _temperature2Points.Clear();
+        _temperatureAvgPoints.Clear();
         _humidity1Points.Clear();
         _humidity2Points.Clear();
+        _humidityAvgPoints.Clear();
 
         _lastOfflineState = false;
         _events.Clear();
@@ -339,15 +365,16 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
             StatusIcon = statusIcon;
         }
         
-        Sensor1Moisture = latest.Sensor1Moisture;
+Sensor1Moisture = latest.Sensor1Moisture;
         Sensor1Raw = latest.Sensor1Raw;
         Sensor2Moisture = latest.Sensor2Moisture;
         Sensor2Raw = latest.Sensor2Raw;
-
         Temperature1 = latest.Temperature1 ?? 0;
         Humidity1 = latest.Humidity1 ?? 0;
         Temperature2 = latest.Temperature2 ?? 0;
         Humidity2 = latest.Humidity2 ?? 0;
+        TemperatureAvg = latest.TemperatureAvg ?? ((latest.Temperature1 ?? 0) + (latest.Temperature2 ?? 0)) / 2.0;
+        HumidityAvg = latest.HumidityAvg ?? ((latest.Humidity1 ?? 0) + (latest.Humidity2 ?? 0)) / 2.0;
         Light1 = latest.Light1 ?? 0;
         Light2 = latest.Light2 ?? 0;
         IsOutsideDark = Light2 <= 1500;
@@ -374,18 +401,22 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
                 _temperature1Points.Add(new DateTimePoint(time, latest.Temperature1.Value));
             if (latest.Temperature2.HasValue)
                 _temperature2Points.Add(new DateTimePoint(time, latest.Temperature2.Value));
+            _temperatureAvgPoints.Add(new DateTimePoint(time, TemperatureAvg));
 
             if (latest.Humidity1.HasValue)
                 _humidity1Points.Add(new DateTimePoint(time, latest.Humidity1.Value));
             if (latest.Humidity2.HasValue)
                 _humidity2Points.Add(new DateTimePoint(time, latest.Humidity2.Value));
+            _humidityAvgPoints.Add(new DateTimePoint(time, HumidityAvg));
 
             while (_soil1Points.Count > 60) _soil1Points.RemoveAt(0);
             while (_soil2Points.Count > 60) _soil2Points.RemoveAt(0);
             while (_temperature1Points.Count > 60) _temperature1Points.RemoveAt(0);
             while (_temperature2Points.Count > 60) _temperature2Points.RemoveAt(0);
+            while (_temperatureAvgPoints.Count > 60) _temperatureAvgPoints.RemoveAt(0);
             while (_humidity1Points.Count > 60) _humidity1Points.RemoveAt(0);
             while (_humidity2Points.Count > 60) _humidity2Points.RemoveAt(0);
+            while (_humidityAvgPoints.Count > 60) _humidityAvgPoints.RemoveAt(0);
 
             Log.Debug("Chart updated for {DeviceId}. S1: {Soil1:F1}%, S2: {Soil2:F1}%, Temp1: {T1:F1}°C, Hum1: {H1:F1}%, Points count: {Count}",
                 DeviceId, latest.Sensor1Moisture, latest.Sensor2Moisture,
@@ -434,8 +465,10 @@ public partial class DetailUserControlViewModel : ViewModelBase, IDisposable
         _soil2Points.Clear();
         _temperature1Points.Clear();
         _temperature2Points.Clear();
+        _temperatureAvgPoints.Clear();
         _humidity1Points.Clear();
         _humidity2Points.Clear();
+        _humidityAvgPoints.Clear();
         Log.Information("Chart cleared");
     }
     

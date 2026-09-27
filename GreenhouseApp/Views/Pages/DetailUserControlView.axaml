@@ -34,83 +34,99 @@
           <Grid ColumnDefinitions="*,*" Margin="0,8,0,0">
             <StackPanel Grid.Column="0">
               <TextBlock Text="ДАТЧИК 1" Foreground="#7FB3D5" FontSize="10"/>
-              <TextBlock FontSize="32" FontWeight="Bold" Foreground="White">
+              <TextBlock FontSize="28" FontWeight="Bold" Foreground="White">
                 <Run Text="{Binding Sensor1Moisture, StringFormat={}{0:F1}}"/>
                 <Run Text="%"/>
               </TextBlock>
-              <TextBlock Text="{Binding Sensor1Raw, StringFormat='RAW: {0}'}"
-                         Foreground="#888" FontSize="10"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1">
               <TextBlock Text="ДАТЧИК 2" Foreground="#7FB3D5" FontSize="10"/>
-              <TextBlock FontSize="32" FontWeight="Bold" Foreground="White">
+              <TextBlock FontSize="28" FontWeight="Bold" Foreground="White">
                 <Run Text="{Binding Sensor2Moisture, StringFormat={}{0:F1}}"/>
                 <Run Text="%"/>
               </TextBlock>
-              <TextBlock Text="{Binding Sensor2Raw, StringFormat='RAW: {0}'}"
-                         Foreground="#888" FontSize="10"/>
             </StackPanel>
           </Grid>
         </StackPanel>
       </Border>
 
-      <!-- ДВА DHT -->
+      <!-- ДВА DHT + СРЕДНЕЕ -->
       <Border Grid.Column="1" Classes="card">
-        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto">
-          <StackPanel Grid.Row="0" Grid.Column="0">
-            <TextBlock Text="ДАТЧИК 1 · ТЕМП." Classes="label"/>
-            <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
-              <Run Text="{Binding Temperature1, StringFormat={}{0:F1}}"/>
-              <Run Text="°C"/>
-            </TextBlock>
-          </StackPanel>
-          <StackPanel Grid.Row="0" Grid.Column="1">
-            <TextBlock Text="ДАТЧИК 1 · ВЛАЖН." Classes="label"/>
-            <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
-              <Run Text="{Binding Humidity1, StringFormat={}{0:F0}}"/>
-              <Run Text="%"/>
-            </TextBlock>
-          </StackPanel>
+        <StackPanel>
+          <TextBlock Text="DHT22" Classes="label"/>
 
-          <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,12,0,0">
-            <TextBlock Text="ДАТЧИК 2 · ТЕМП." Classes="label"/>
-            <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
-              <Run Text="{Binding Temperature2, StringFormat={}{0:F1}}"/>
-              <Run Text="°C"/>
-            </TextBlock>
-          </StackPanel>
-          <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,12,0,0">
-            <TextBlock Text="ДАТЧИК 2 · ВЛАЖН." Classes="label"/>
-            <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
-              <Run Text="{Binding Humidity2, StringFormat={}{0:F0}}"/>
-              <Run Text="%"/>
-            </TextBlock>
-          </StackPanel>
+          <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" Margin="0,8,0,0">
+            <StackPanel Grid.Row="0" Grid.Column="0">
+              <TextBlock Text="ДАТЧИК 1 · ТЕМП." Foreground="#7FB3D5" FontSize="10"/>
+              <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,2,0,0">
+                <TextBlock FontSize="22" FontWeight="SemiBold" Foreground="White">
+                  <Run Text="{Binding Temperature1, StringFormat={}{0:F1}}"/>
+                  <Run Text="°C"/>
+                </TextBlock>
+                <TextBlock FontSize="22" FontWeight="SemiBold" Foreground="White">
+                  <Run Text="{Binding Humidity1, StringFormat={}{0:F0}}"/>
+                  <Run Text="%"/>
+                </TextBlock>
+              </StackPanel>
+            </StackPanel>
 
-          <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,12,0,0">
-            <TextBlock Text="СВЕТ · ВНУТРИ" Classes="label"/>
-            <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,6,0,0">
-              <Run Text="{Binding Light1, StringFormat={}{0:F0}}"/>
-              <Run Text=" lux"/>
-            </TextBlock>
-          </StackPanel>
-          <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,12,0,0">
-            <TextBlock Text="СВЕТ · СНАРУЖИ" Classes="label"/>
-            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
-              <Svg Path="/Assets/sun.svg" Width="24" Height="24" VerticalAlignment="Center"
-                   IsVisible="{Binding !IsOutsideDark}" Css="* { stroke: #FFB74D }"/>
-              <Svg Path="/Assets/moon.svg" Width="24" Height="24" VerticalAlignment="Center"
-                   IsVisible="{Binding IsOutsideDark}" Css="* { stroke: #81D4FA }"/>
-              <TextBlock FontSize="26" FontWeight="Bold" Foreground="White">
-                <Run Text="{Binding Light2, StringFormat={}{0:F0}}"/>
+            <StackPanel Grid.Row="0" Grid.Column="1">
+              <TextBlock Text="ДАТЧИК 2 · ТЕМП." Foreground="#7FB3D5" FontSize="10"/>
+              <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,2,0,0">
+                <TextBlock FontSize="22" FontWeight="SemiBold" Foreground="White">
+                  <Run Text="{Binding Temperature2, StringFormat={}{0:F1}}"/>
+                  <Run Text="°C"/>
+                </TextBlock>
+                <TextBlock FontSize="22" FontWeight="SemiBold" Foreground="White">
+                  <Run Text="{Binding Humidity2, StringFormat={}{0:F0}}"/>
+                  <Run Text="%"/>
+                </TextBlock>
+              </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,14,0,0">
+              <TextBlock Text="СРЕДНЕЕ DHT22" Foreground="#E0A83C" FontSize="10" FontWeight="Bold"/>
+              <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,2,0,0">
+                <TextBlock FontSize="28" FontWeight="Bold" Foreground="#FFD54F">
+                  <Run Text="{Binding TemperatureAvg, StringFormat={}{0:F1}}"/>
+                  <Run Text="°C"/>
+                </TextBlock>
+                <TextBlock FontSize="28" FontWeight="Bold" Foreground="#FFD54F">
+                  <Run Text="{Binding HumidityAvg, StringFormat={}{0:F0}}"/>
+                  <Run Text="%"/>
+                </TextBlock>
+              </StackPanel>
+            </StackPanel>
+          </Grid>
+
+          <Border Height="1" Background="#1A3A5C" Margin="0,14,0,12"/>
+
+          <Grid ColumnDefinitions="*,*">
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="СВЕТ · ВНУТРИ" Classes="label"/>
+              <TextBlock FontSize="22" FontWeight="Bold" Foreground="White" Margin="0,4,0,0">
+                <Run Text="{Binding Light1, StringFormat={}{0:F0}}"/>
                 <Run Text=" lux"/>
               </TextBlock>
             </StackPanel>
-            <TextBlock Text="{Binding LightRelayText}" Foreground="{Binding LightRelayColor}"
-                       FontSize="11" Margin="0,4,0,0"/>
-          </StackPanel>
-        </Grid>
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="СВЕТ · СНАРУЖИ" Classes="label"/>
+              <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+                <Svg Path="/Assets/sun.svg" Width="20" Height="20" VerticalAlignment="Center"
+                     IsVisible="{Binding !IsOutsideDark}" Css="* { stroke: #FFB74D }"/>
+                <Svg Path="/Assets/moon.svg" Width="20" Height="20" VerticalAlignment="Center"
+                     IsVisible="{Binding IsOutsideDark}" Css="* { stroke: #81D4FA }"/>
+                <TextBlock FontSize="22" FontWeight="Bold" Foreground="White">
+                  <Run Text="{Binding Light2, StringFormat={}{0:F0}}"/>
+                  <Run Text=" lux"/>
+                </TextBlock>
+              </StackPanel>
+              <TextBlock Text="{Binding LightRelayText}" Foreground="{Binding LightRelayColor}"
+                         FontSize="11" Margin="0,3,0,0"/>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
       </Border>
     </Grid>
 
@@ -181,7 +197,13 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsTemperatureChart}">
-              <Border Width="12" Height="12" Background="#FFB74D"
+              <Border Width="18" Height="3" Background="#FFB74D"
+                      CornerRadius="2" VerticalAlignment="Center"/>
+              <TextBlock Text="Среднее" Foreground="#7FB3D5"
+                         FontSize="11" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsTemperatureChart}">
+              <Border Width="12" Height="12" Background="#FFF3E0"
                       CornerRadius="6" VerticalAlignment="Center"/>
               <TextBlock Text="Датчик 1" Foreground="#7FB3D5"
                          FontSize="11" VerticalAlignment="Center"/>
@@ -194,7 +216,13 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsHumidityChart}">
-              <Border Width="12" Height="12" Background="#81D4FA"
+              <Border Width="18" Height="3" Background="#4FC3F7"
+                      CornerRadius="2" VerticalAlignment="Center"/>
+              <TextBlock Text="Среднее" Foreground="#7FB3D5"
+                         FontSize="11" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsHumidityChart}">
+              <Border Width="12" Height="12" Background="#E1F5FE"
                       CornerRadius="6" VerticalAlignment="Center"/>
               <TextBlock Text="Датчик 1" Foreground="#7FB3D5"
                          FontSize="11" VerticalAlignment="Center"/>

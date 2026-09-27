@@ -28,6 +28,10 @@ public class Telemetry
     [JsonPropertyName("temperature2")]   public double? Temperature2 { get; set; }
     [JsonPropertyName("humidity2")]      public double? Humidity2    { get; set; }
 
+    // ==== Средние значения по двум DHT22 ====
+    [JsonPropertyName("temperature_avg")] public double? TemperatureAvg { get; set; }
+    [JsonPropertyName("humidity_avg")]    public double? HumidityAvg    { get; set; }
+
     // ==== Освещённость ====
     [JsonPropertyName("light1")]         public int? Light1 { get; set; }
     [JsonPropertyName("light2")]         public int? Light2 { get; set; }
